@@ -1,0 +1,3 @@
+*.xml
+*.json
+!dictionary_to_sqlite/
