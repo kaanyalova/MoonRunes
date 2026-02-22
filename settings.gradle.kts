@@ -9,6 +9,7 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+
     }
 }
 plugins {
@@ -19,6 +20,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // TODO this is deprecated?
+        maven("https://jitpack.io")
     }
 }
 

@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -41,6 +43,9 @@ android {
 }
 
 dependencies {
+    ksp(libs.room.compiler)
+    ksp(libs.hilt.compiler)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -56,7 +61,10 @@ dependencies {
 
     }
     implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
+    implementation(libs.sqlite.android)
+    implementation(libs.hilt.android)
+    implementation(libs.kotlin.serialization.json)
+    implementation(libs.wanakana.kt)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

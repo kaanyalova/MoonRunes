@@ -11,6 +11,10 @@ composeBom = "2026.02.00"
 zstdJni = "1.5.7-7"
 room = "2.8.4"
 ksp = "2.3.5"
+sqlite = "3.49.0"
+hilt = "2.59.1"
+kotlinx-serialization = "1.10.0"
+wanakana-kt = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -27,11 +31,19 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+
 zstd-jni = { group = "com.github.luben", name = "zstd-jni", version.ref = "zstdJni" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-room-compiler = {group = "androidx.room", name = "room-compiler", version.ref = "room"}
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+sqlite-android = { group = "com.github.requery", name = "sqlite-android", version.ref = "sqlite" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+kotlin-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+wanakana-kt = { group = "dev.esnault.wanakana", name = "wanakana-android", version.ref = "wanakana-kt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
