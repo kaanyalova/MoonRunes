@@ -1,16 +1,17 @@
 CREATE TABLE IF NOT EXISTS Entry (
     id INTEGER PRIMARY KEY NOT NULL
+    --relevancy_score INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS KanjiElement (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, -- ids are ordered by priority (not the literal table "Priority")
     body TEXT NOT NULL,
     entry_fk INTEGER NOT NULL --REFERENCES Entry(id) NOT NULL
-); 
+);
 
 CREATE TABLE IF NOT EXISTS Priority (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    element_fk INTEGER NOT NULL, -- either a kanji or reading id 
+    element_fk INTEGER NOT NULL, -- either a kanji or reading id
     body TEXT NOT NULL
 );
 
@@ -21,6 +22,12 @@ CREATE TABLE IF NOT EXISTS ReadingElement (
     entry_fk INTEGER NOT NULL -- REFERENCES Entry(id) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS RomajiReadingElement (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    body TEXT NOT NULL,
+    entry_fk INTEGER NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS Sense (
     id INTEGER PRIMARY KEY NOT NULL,
     entry_fk INTEGER NOT NULL --REFERENCES Entry(id) NOT NULL
@@ -28,7 +35,7 @@ CREATE TABLE IF NOT EXISTS Sense (
 
 CREATE TABLE IF NOT EXISTS PartOfSpeech (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    sense_fk INTEGER NOT NULL, --REFERENCES Sense(id) NOT NULL, 
+    sense_fk INTEGER NOT NULL, --REFERENCES Sense(id) NOT NULL,
     body TEXT NOT NULL
 );
 
@@ -36,4 +43,18 @@ CREATE TABLE IF NOT EXISTS Definition (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     sense_fk INTEGER NOT NULL, --REFERENCES Sense(id) NOT NULL,
     body TEXT NOT NULL
-); 
+);
+
+
+CREATE TABLE IF NOT EXISTS MapsToKanji (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    reading_fk INTEGER NOT NULL,
+    body TEXT NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS KanjiInformation (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    kanji_element_fk INTEGER NOT NULL,
+    body TEXT NOT NULL
+);
