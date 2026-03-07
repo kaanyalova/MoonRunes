@@ -8,7 +8,7 @@ import androidx.room.RoomRawQuery
 
 fun searchTopNEntriesByReadingRawQuery(
     dao: DictionaryDao, input: String, n: Int
-): List<DictionaryEntry> {
+): List<DictionaryDatabaseEntry> {
     val query = RoomRawQuery(
         sql = """
             SELECT e.* FROM Entry e
@@ -31,7 +31,7 @@ fun searchTopNEntriesByReadingRawQuery(
 
 fun searchTopNEntriesByDefinitionRawQuery(
     dao: DictionaryDao, input: String, n: Int
-): List<DictionaryEntry> {
+): List<DictionaryDatabaseEntry> {
     val query = RoomRawQuery(
         sql = """
             SELECT e.* FROM Entry e
@@ -54,7 +54,7 @@ fun searchTopNEntriesByDefinitionRawQuery(
 
 fun searchTopNEntriesByKanjiRawQuery(
     dao: DictionaryDao, input: String, n: Int
-): List<DictionaryEntry> {
+): List<DictionaryDatabaseEntry> {
     val query = RoomRawQuery(
         sql = """
         SELECT e.* FROM Entry e
@@ -76,7 +76,7 @@ fun searchTopNEntriesByKanjiRawQuery(
 
 fun searchTopNEntriesByRomajiReadingRawQuery(
     dao: DictionaryDao, input: String, n: Int
-): List<DictionaryEntry> {
+): List<DictionaryDatabaseEntry> {
     val query = RoomRawQuery(
         sql = """
             SELECT e.* FROM Entry e

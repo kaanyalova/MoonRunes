@@ -27,41 +27,38 @@ data class Entry(
 
 @Entity(
     indices = [Index(
-        value = ["entry_fk"],
-        name = "idx_kanjielement_entry"
+        value = ["entry_fk"], name = "idx_kanjielement_entry"
     )]
 )
 @Serializable
 data class KanjiElement(
-    @PrimaryKey val id: Long,
-    val body: String,
-    @ColumnInfo(name = "entry_fk") val entryFk: Long,
+    @PrimaryKey val id: Long, val body: String, @ColumnInfo(name = "entry_fk") val entryFk: Long,
 
     )
 
+
 @Serializable
-data class KanjiElementWithPriorities(
-    @Embedded
-    val kanjiElement: KanjiElement,
-    @Relation(parentColumn = "id", entityColumn = "element_fk")
-    val priority: List<Priority>
+data class KanjiElementWithPrioritiesAndInformation(
+    @Embedded val kanjiElement: KanjiElement,
+    @Relation(parentColumn = "id", entityColumn = "element_fk") val priority: List<Priority>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "kanji_element_fk"
+    ) val kanjiInfo: List<KanjiInformation> = mutableListOf(),
 )
 
 
 @Serializable
-data class ReadingElementWithPriorities(
-    @Embedded
-    val readingElement: ReadingElement,
-    @Relation(parentColumn = "id", entityColumn = "element_fk")
-    val priority: List<Priority>
+data class ReadingElementWithPrioritiesAndKanjiMappings(
+    @Embedded val readingElement: ReadingElement,
+    @Relation(parentColumn = "id", entityColumn = "element_fk") val priority: List<Priority>,
+    @Relation(parentColumn = "id", entityColumn = "reading_fk") val kanjiMappings: List<MapsToKanji> = arrayListOf()
 )
-
 
 
 @Entity(
     indices = [Index(
-        value = ["element_fk"],
-        name = "idx_priority_element"
+        value = ["element_fk"], name = "idx_priority_element"
     )]
 )
 @Serializable
@@ -71,10 +68,17 @@ data class Priority(
     val body: String,
 )
 
+@Entity
+@Serializable
+data class KanjiInformation(
+    @PrimaryKey val id: Long,
+    @ColumnInfo(name = "kanji_element_fk") val kanjiElementFk: Long,
+    val body: String,
+)
+
 @Entity(
     indices = [Index(
-        value = ["entry_fk"],
-        name = "idx_readingelement_entry"
+        value = ["entry_fk"], name = "idx_readingelement_entry"
     )]
 )
 @Serializable
@@ -85,11 +89,9 @@ data class ReadingElement(
 )
 
 
-
 @Entity(
     indices = [Index(
-        value = ["entry_fk"],
-        name = "idx_sense_entry"
+        value = ["entry_fk"], name = "idx_sense_entry"
     )]
 )
 @Serializable
@@ -101,8 +103,7 @@ data class Sense(
 
 @Entity(
     indices = [Index(
-        value = ["sense_fk"],
-        name = "idx_partofspeech_sense"
+        value = ["sense_fk"], name = "idx_partofspeech_sense"
     )]
 )
 @Serializable
@@ -114,8 +115,7 @@ data class PartOfSpeech(
 
 @Entity(
     indices = [Index(
-        value = ["sense_fk"],
-        name = "idx_definition_sense"
+        value = ["sense_fk"], name = "idx_definition_sense"
     )]
 )
 @Serializable
@@ -126,16 +126,16 @@ data class Definition(
 )
 
 @Serializable
-data class DictionaryEntry(
+data class DictionaryDatabaseEntry(
     @Embedded val entry: Entry,
 
     @Relation(
         parentColumn = "id", entityColumn = "entry_fk", entity = KanjiElement::class
-    ) val kanjiElements: List<KanjiElementWithPriorities>,
+    ) val kanjiElements: List<KanjiElementWithPrioritiesAndInformation>,
 
     @Relation(
         parentColumn = "id", entityColumn = "entry_fk", entity = ReadingElement::class
-    ) val readingElements: List<ReadingElementWithPriorities>,
+    ) val readingElements: List<ReadingElementWithPrioritiesAndKanjiMappings>,
 
     @Relation(
         parentColumn = "id", entityColumn = "entry_fk", entity = Sense::class
@@ -165,32 +165,52 @@ data class ReadingElementFts(
 )
 
 
+@Serializable
+@Entity
+// this is here when there is multiple kanji that maps to the same/multiple readings,
+// so it maps the reading to the kanji's body, so the current reading element is bound to the body here
+data class MapsToKanji(
+    @PrimaryKey val id: Long,
+    @ColumnInfo(name = "reading_fk") val readingFk: Long,
+    val body: String,
+)
+
 @Dao
 interface DictionaryDao {
     @Transaction
     @Query("SELECT * FROM Entry LIMIT 10")
-    fun getFirst10(): List<DictionaryEntry>
+    fun getFirst10(): List<DictionaryDatabaseEntry>
 
     @Transaction
     @RawQuery
-    fun searchTopNEntriesByReading(query: RoomRawQuery): List<DictionaryEntry>
+    fun searchTopNEntriesByReading(query: RoomRawQuery): List<DictionaryDatabaseEntry>
 
     @Transaction
     @RawQuery
-    fun searchTopNEntriesByKanji(query: RoomRawQuery): List<DictionaryEntry>
+    fun searchTopNEntriesByKanji(query: RoomRawQuery): List<DictionaryDatabaseEntry>
 
     @Transaction
     @RawQuery
-    fun searchTopNEntriesByDefinition(query: RoomRawQuery): List<DictionaryEntry>
+    fun searchTopNEntriesByDefinition(query: RoomRawQuery): List<DictionaryDatabaseEntry>
 
     @Transaction
     @RawQuery
-    fun searchTopNEntriesByRomajiReading(query: RoomRawQuery): List<DictionaryEntry>
+    fun searchTopNEntriesByRomajiReading(query: RoomRawQuery): List<DictionaryDatabaseEntry>
 }
 
 
 @Database(
-    entities = [Entry::class, KanjiElement::class, Priority::class, ReadingElement::class, Sense::class, PartOfSpeech::class, Definition::class],
+    entities = [
+        Entry::class,
+        KanjiElement::class,
+        Priority::class,
+        ReadingElement::class,
+        Sense::class,
+        PartOfSpeech::class,
+        Definition::class,
+        KanjiInformation::class,
+        MapsToKanji::class,
+    ],
     version = 1
 )
 abstract class DictionaryDatabase : RoomDatabase() {

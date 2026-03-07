@@ -2,14 +2,13 @@ package com.kaanb.moonrunes.dictionary.repository
 
 import android.util.Log
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDao
-import com.kaanb.moonrunes.dictionary.dao.DictionaryEntry
+import com.kaanb.moonrunes.dictionary.dao.DictionaryDatabaseEntry
 import com.kaanb.moonrunes.dictionary.dao.searchTopNEntriesByDefinitionRawQuery
 import com.kaanb.moonrunes.dictionary.dao.searchTopNEntriesByKanjiRawQuery
 import com.kaanb.moonrunes.dictionary.dao.searchTopNEntriesByReadingRawQuery
 import com.kaanb.moonrunes.dictionary.dao.searchTopNEntriesByRomajiReadingRawQuery
 import com.kaanb.moonrunes.dictionary.util.TextType
 import com.kaanb.moonrunes.dictionary.util.detectTextType
-import kotlinx.serialization.json.Json
 
 const val TAG = "DictionaryRepository"
 
@@ -17,7 +16,7 @@ class DictionaryRepository(private val dictionaryDao: DictionaryDao) {
 
     val MAX_ENTRIES_PER_CATEGORY = 50
 
-    fun searchDictionary(input: String): List<DictionaryEntry> {
+    fun searchDictionary(input: String): List<DictionaryDatabaseEntry> {
         val start = System.currentTimeMillis()
 
         if (input.isEmpty()) {
@@ -31,7 +30,7 @@ class DictionaryRepository(private val dictionaryDao: DictionaryDao) {
         Log.d(TAG, "text type detection took ${textTypeDetectionEnd - textTypeDetectionStart}ms")
 
 
-        var combined: List<DictionaryEntry> = mutableListOf<DictionaryEntry>().toMutableList()
+        var combined: List<DictionaryDatabaseEntry> = mutableListOf<DictionaryDatabaseEntry>().toMutableList()
         Log.d(TAG, "search type is $textType")
 
 
@@ -88,6 +87,7 @@ class DictionaryRepository(private val dictionaryDao: DictionaryDao) {
 
         return combined
     }
+
 
 
 }
