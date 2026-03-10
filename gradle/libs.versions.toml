@@ -13,8 +13,12 @@ room = "2.8.4"
 ksp = "2.3.5"
 sqlite = "3.49.0"
 hilt = "2.59.1"
-kotlinx-serialization = "1.10.0"
-wanakana-kt = "1.1.1"
+kotlinxSerialziation = "1.10.0"
+wanakanaKt = "1.1.1"
+navigation3Core = "1.0.1"
+lifecycleViewmodelNav3 = "2.11.0-alpha01"
+material3AdaptiveNav3 = "1.3.0-alpha09"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,6 +35,10 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3Core" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+androidx-material3-adaptive-navigation3 = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "material3AdaptiveNav3" }
 
 zstd-jni = { group = "com.github.luben", name = "zstd-jni", version.ref = "zstdJni" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
@@ -38,8 +46,9 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 sqlite-android = { group = "com.github.requery", name = "sqlite-android", version.ref = "sqlite" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
-kotlin-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-wanakana-kt = { group = "dev.esnault.wanakana", name = "wanakana-android", version.ref = "wanakana-kt" }
+kotlin-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialziation" }
+wanakana-kt = { group = "dev.esnault.wanakana", name = "wanakana-android", version.ref = "wanakanaKt" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

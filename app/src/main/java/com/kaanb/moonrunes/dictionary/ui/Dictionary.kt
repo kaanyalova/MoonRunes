@@ -1,6 +1,7 @@
 package com.kaanb.moonrunes.dictionary.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -15,10 +16,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDatabaseEntry
 import com.kaanb.moonrunes.dictionary.dao.connectToDictionaryDb
 import com.kaanb.moonrunes.dictionary.repository.DictionaryRepository
+import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DetailedDictionaryEntry
 import com.kaanb.moonrunes.dictionary.util.decompressDictionaries
+import com.kaanb.moonrunes.dictionary.util.formatDictionaryEntry
 
 @Composable
 fun Dictionary(modifier: Modifier = Modifier, dictionaryRepository: DictionaryRepository) {
@@ -37,9 +41,10 @@ fun Dictionary(modifier: Modifier = Modifier, dictionaryRepository: DictionaryRe
         )
 
         LazyColumn() {
-            //items(entriesData) { it ->
-            //    DetailedDictionaryEntry(it)
-            //}
+            items(entriesData) { it ->
+                val data = formatDictionaryEntry(it, LocalContext.current)
+                DetailedDictionaryEntry(data, modifier = Modifier.padding(8.dp))
+            }
 
         }
     }
