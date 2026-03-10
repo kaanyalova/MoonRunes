@@ -26,3 +26,8 @@ fun containsKanji(input: String): Boolean {
     val hasKanji = tokens.any { it -> Wanakana.isKanji(it) }
     return hasKanji
 }
+
+fun filterAndSplitKanji(input: String): List<String> {
+    val tokens = Wanakana.tokenize(input)
+    return tokens.filter { token -> Wanakana.isKanji(token) }
+}

@@ -94,5 +94,6 @@
     <string name="dictionary_part_of_speech_vs_s">suru verb - special class</string>
     <string name="dictionary_part_of_speech_vt">transitive verb</string>
     <string name="dictionary_part_of_speech_vz">Ichidan verb - zuru verb (alternative form of -jiru verbs)</string>
-
+    <string name="dictionary_meanings">Meanings</string>
+    <string name="dictionary_other_forms">Other Forms</string>
 </resources>

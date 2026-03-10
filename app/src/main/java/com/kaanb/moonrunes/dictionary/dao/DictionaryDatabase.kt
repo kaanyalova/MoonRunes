@@ -217,12 +217,3 @@ abstract class DictionaryDatabase : RoomDatabase() {
     abstract fun dictionaryDao(): DictionaryDao
 }
 
-fun connectToDictionaryDb(context: Context): DictionaryDatabase {
-    val file = File(context.filesDir, "dict.db")
-
-    val db = Room.databaseBuilder(
-        context, DictionaryDatabase::class.java, file.absolutePath
-    ).openHelperFactory(RequerySQLiteOpenHelperFactory()).allowMainThreadQueries().build()
-
-    return db
-}
