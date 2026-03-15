@@ -96,4 +96,6 @@
     <string name="dictionary_part_of_speech_vz">Ichidan verb - zuru verb (alternative form of -jiru verbs)</string>
     <string name="dictionary_meanings">Meanings</string>
     <string name="dictionary_other_forms">Other Forms</string>
+    <string name="dictionary_search_bar_placeholder">Search a Word</string>
+    <string name="dictionary_kanji_list_header">Kanji Information</string>
 </resources>

@@ -48,11 +48,23 @@ data class KanjiElementWithPrioritiesAndInformation(
 )
 
 
+@Entity
+data class KanjiDicEntry(
+    @PrimaryKey val id: Long,
+    val body: String,
+    @ColumnInfo(name = "json_data")
+    val jsonData: String,
+)
+
+
 @Serializable
 data class ReadingElementWithPrioritiesAndKanjiMappings(
     @Embedded val readingElement: ReadingElement,
     @Relation(parentColumn = "id", entityColumn = "element_fk") val priority: List<Priority>,
-    @Relation(parentColumn = "id", entityColumn = "reading_fk") val kanjiMappings: List<MapsToKanji> = arrayListOf()
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "reading_fk"
+    ) val kanjiMappings: List<MapsToKanji> = arrayListOf()
 )
 
 
@@ -196,7 +208,20 @@ interface DictionaryDao {
     @Transaction
     @RawQuery
     fun searchTopNEntriesByRomajiReading(query: RoomRawQuery): List<DictionaryDatabaseEntry>
+
+    @Transaction
+    @Query(
+        """
+           SELECT e.* FROM Entry e WHERE e.id = :id
+    """
+    )
+    fun getEntryById(id: Long): DictionaryDatabaseEntry
+
+    @Query("SELECT * FROM KanjiDicEntry WHERE body = :body")
+    fun getKanjiDicEntry(body: String): KanjiDicEntry
 }
+
+
 
 
 @Database(
@@ -210,6 +235,7 @@ interface DictionaryDao {
         Definition::class,
         KanjiInformation::class,
         MapsToKanji::class,
+        KanjiDicEntry::class
     ],
     version = 1
 )

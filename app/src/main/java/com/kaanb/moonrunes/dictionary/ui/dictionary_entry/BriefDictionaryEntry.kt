@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,11 +19,24 @@ import com.kaanb.moonrunes.ui.theme.MoonRunesTheme
 import kotlinx.serialization.json.Json
 
 @Composable
-fun BriefDictionaryEntry(modifier: Modifier = Modifier, entry: DictionaryEntry) {
-    OutlinedCard(modifier = modifier.fillMaxWidth()) {
+fun BriefDictionaryEntry(
+    modifier: Modifier = Modifier,
+    entry: DictionaryEntry,
+    onClick: (id: Long) -> Unit = {}
+) {
+    OutlinedCard(modifier = modifier.fillMaxWidth(), onClick = { onClick(entry.entryId) }) {
         Column(modifier = Modifier.padding(20.dp)) {
             MainWordDisplay(word = entry.mainWordDisplay.word)
+
+
+            Text(
+                entry.meanings.first().values.joinToString("; "),
+                style = MaterialTheme.typography.bodyLarge
+
+            )
+
         }
+
 
     }
 }

@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,11 +22,12 @@ import kotlinx.serialization.json.Json
 
 @Composable
 fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifier) {
-    OutlinedCard(
-        modifier = modifier.fillMaxWidth()
+
+    Surface(
+        modifier = modifier
+            .fillMaxSize()
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
-
             val mainWord = entry.mainWordDisplay.word
 
             MainWordDisplay(word = mainWord)
@@ -41,19 +44,33 @@ fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifie
             }
 
 
-            MeaningList(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), entry.meanings)
+            MeaningList(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp), entry.meanings
+            )
 
 
             if (entry.otherForms.isNotEmpty()) {
                 OtherForms(otherForms = entry.otherForms, modifier = Modifier.fillMaxWidth())
             }
 
-        }
+            if (entry.kanji.isNotEmpty()) {
+                KanjiList(
+                    entry = entry,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                )
+            }
 
+        }
 
     }
 
+
 }
+
 
 @Preview
 @Composable

@@ -294,7 +294,7 @@ fun formatDictionaryEntry(entry: DictionaryDatabaseEntry, context: Context): Dic
     val mainWord = mainWordDisplay.word
 
     val kanjiInMainWord: List<String> = when (mainWord) {
-        is WordDisplayData.KanjiWordDisplay -> filterAndSplitKanji(mainWord.value.kanji)
+        is WordDisplayData.KanjiWordDisplay -> extractKanji(mainWord.value.kanji)
         is WordDisplayData.NormalWordDisplay -> listOf()
     }
 

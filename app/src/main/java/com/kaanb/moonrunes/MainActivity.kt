@@ -17,7 +17,9 @@ import com.kaanb.moonrunes.dictionary.util.decompressDictionaries
 import com.kaanb.moonrunes.navigation.NavigationRoot
 import com.kaanb.moonrunes.navigation.Route
 import com.kaanb.moonrunes.ui.theme.MoonRunesTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

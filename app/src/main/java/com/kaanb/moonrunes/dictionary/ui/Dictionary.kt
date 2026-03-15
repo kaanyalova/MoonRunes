@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDatabaseEntry
-import com.kaanb.moonrunes.dictionary.dao.connectToDictionaryDb
 import com.kaanb.moonrunes.dictionary.repository.DictionaryRepository
 import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DetailedDictionaryEntry
 import com.kaanb.moonrunes.dictionary.util.decompressDictionaries
@@ -52,13 +51,3 @@ fun Dictionary(modifier: Modifier = Modifier, dictionaryRepository: DictionaryRe
 
 }
 
-@Preview
-@Composable
-private fun DictionaryPreview() {
-    decompressDictionaries(LocalContext.current)
-    val dao = connectToDictionaryDb(LocalContext.current).dictionaryDao()
-    val repository = DictionaryRepository(dao)
-
-
-    Dictionary(dictionaryRepository = repository)
-}

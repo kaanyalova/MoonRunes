@@ -46,7 +46,10 @@ fun MeaningList(modifier: Modifier = Modifier, meanings: List<Meaning>) {
                             }.distinct()
                             .joinToString("; ")
 
-                    Text(joined, style = MaterialTheme.typography.labelSmall)
+                    Text(
+                        joined, style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
 
                 }
 
@@ -67,7 +70,7 @@ fun MeaningList(modifier: Modifier = Modifier, meanings: List<Meaning>) {
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .alignByBaseline(),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }

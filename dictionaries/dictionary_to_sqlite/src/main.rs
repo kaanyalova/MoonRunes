@@ -8,39 +8,39 @@ use sqlx::{
 
 #[derive(Debug, Serialize, Deserialize)]
 struct JmDictEntries {
-    #[serde(rename = "entry")]
+    #[serde(rename(deserialize = "entry"))]
     entries: Vec<Entry>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Entry {
-    #[serde(rename = "ent_seq")]
+    #[serde(rename(deserialize = "ent_seq"))]
     entry_sequence: i64,
-    #[serde(rename = "k_ele", default)]
+    #[serde(rename(deserialize = "k_ele"), default)]
     kanji_elements: Vec<KanjiElement>,
-    #[serde(rename = "r_ele")]
+    #[serde(rename(deserialize = "r_ele"))]
     reading_elements: Vec<ReadingElement>,
-    #[serde(rename = "sense")]
+    #[serde(rename(deserialize = "sense"))]
     senses: Vec<Sense>,
     //relevancy_score: i64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiElement {
-    #[serde(rename = "keb")]
+    #[serde(rename(deserialize = "keb"))]
     body: String,
-    #[serde(rename = "ke_pri", default)]
+    #[serde(rename(deserialize = "ke_pri"), default)]
     priorities: Vec<String>,
-    #[serde(rename = "ke_inf", default)]
+    #[serde(rename(deserialize = "ke_inf"), default)]
     kanji_info: Vec<String>,
 }
 #[derive(Debug, Serialize, Deserialize)]
 struct ReadingElement {
-    #[serde(rename = "reb")]
+    #[serde(rename(deserialize = "reb"))]
     body: String,
-    #[serde(rename = "re_pri", default)]
+    #[serde(rename(deserialize = "re_pri"), default)]
     priorities: Vec<String>,
-    #[serde(rename = "re_restr", default)]
+    #[serde(rename(deserialize = "re_restr"), default)]
     // this is here when there is multiple kanji that maps to the same/multiple readings, might not be there as well
     // which means it just maps to all kanji
     maps_to_kanji: Vec<String>,
@@ -48,9 +48,9 @@ struct ReadingElement {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Sense {
-    #[serde(rename = "pos", default)]
+    #[serde(rename(deserialize = "pos"), default)]
     parts_of_speech: Vec<String>,
-    #[serde(rename = "gloss", default)]
+    #[serde(rename(deserialize = "gloss"), default)]
     definitions: Vec<String>,
 }
 
@@ -58,16 +58,16 @@ struct Sense {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiCharacter {
-    #[serde(rename = "literal")]
+    #[serde(rename(deserialize = "literal"))]
     literal: String,
-    #[serde(rename = "codepoint")]
+    #[serde(rename(deserialize = "codepoint"))]
     codepoints: KanjiCodepointGroup,
-    #[serde(rename = "radical")]
+    #[serde(rename(deserialize = "radical"))]
     radicals: KanjiRadicalGroup,
     misc: KanjiMisc,
-    #[serde(rename = "dic_number", default)]
+    #[serde(rename(deserialize = "dic_number"), default)]
     dictionary_references: KanjiDictionaryReferenceGroup,
-    #[serde(rename = "query_code", default)]
+    #[serde(rename(deserialize = "query_code"), default)]
     query_codes: KanjiQueryCodeGroup,
     #[serde(default)]
     reading_meaning: KanjiReadingMeaning,
@@ -75,55 +75,55 @@ struct KanjiCharacter {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiRadicalGroup {
-    #[serde(rename = "rad_value")]
+    #[serde(rename(deserialize = "rad_value"))]
     values: Vec<KanjiRadical>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiCodepointGroup {
-    #[serde(rename = "cp_value", default)]
+    #[serde(rename(deserialize = "cp_value"), default)]
     values: Vec<KanjiCodePoint>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiCodePoint {
-    #[serde(rename = "@cp_type")]
+    #[serde(rename(deserialize = "@cp_type"))]
     codepoint_type: String,
-    #[serde(rename = "$text")]
+    #[serde(rename(deserialize = "$text"))]
     body: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiRadical {
-    #[serde(rename = "@rad_type")]
+    #[serde(rename(deserialize = "@rad_type"))]
     radical_type: String,
-    #[serde(rename = "$text")]
+    #[serde(rename(deserialize = "$text"))]
     body: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiMiscVariant {
-    #[serde(rename = "@var_type")]
+    #[serde(rename(deserialize = "@var_type"))]
     variant_type: String,
-    #[serde(rename = "$text")]
+    #[serde(rename(deserialize = "$text"))]
     body: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 struct KanjiDictionaryReferenceGroup {
-    #[serde(rename = "dic_ref")]
+    #[serde(rename(deserialize = "dic_ref"))]
     entries: Vec<KanjiDictionaryReference>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiDictionaryReference {
-    #[serde(rename = "@dr_type")]
+    #[serde(rename(deserialize = "@dr_type"))]
     dictionary_type: String,
-    #[serde(rename = "@m_vol", default)]
+    #[serde(rename(deserialize = "@m_vol"), default)]
     volume: String,
-    #[serde(rename = "@m_page", default)]
+    #[serde(rename(deserialize = "@m_page"), default)]
     page: String,
-    #[serde(rename = "$text")]
+    #[serde(rename(deserialize = "$text"))]
     body: String,
 }
 
@@ -132,9 +132,9 @@ struct KanjiMisc {
     #[serde(default)]
     grade: String,
     stroke_count: Vec<String>,
-    #[serde(rename = "variant", default)]
+    #[serde(rename(deserialize = "variant"), default)]
     variants: Vec<KanjiMiscVariant>,
-    #[serde(rename = "freq", default)]
+    #[serde(rename(deserialize = "freq"), default)]
     frequency: String,
     #[serde(default)]
     jlpt: String,
@@ -142,54 +142,54 @@ struct KanjiMisc {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiQueryCode {
-    #[serde(rename = "@qc_type")]
+    #[serde(rename(deserialize = "@qc_type"))]
     query_code_type: String,
-    #[serde(rename = "$text")]
+    #[serde(rename(deserialize = "$text"))]
     body: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 struct KanjiQueryCodeGroup {
-    #[serde(rename = "q_code")]
+    #[serde(rename(deserialize = "q_code"))]
     entries: Vec<KanjiQueryCode>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 struct KanjiReadingMeaning {
-    #[serde(rename = "rmgroup")]
+    #[serde(rename(deserialize = "rmgroup"))]
     group: KanjiReadingMeaningGroup,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 struct KanjiReadingMeaningGroup {
-    #[serde(rename = "reading", default)]
+    #[serde(rename(deserialize = "reading"), default)]
     readings: Vec<KanjiReading>,
-    #[serde(rename = "meaning", default)]
+    #[serde(rename(deserialize = "meaning"), default)]
     meanings: Vec<KanjiMeaning>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiReading {
-    #[serde(rename = "@r_type")]
+    #[serde(rename(deserialize = "@r_type"))]
     reading_type: String,
-    #[serde(rename = "$value")]
+    #[serde(rename(deserialize = "$value"))]
     body: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiMeaning {
-    #[serde(rename = "@m_lang", default)]
+    #[serde(rename(deserialize = "@m_lang"), default)]
     language: String,
-    #[serde(rename = "$value")]
+    #[serde(rename(deserialize = "$value"))]
     body: String,
 }
 #[derive(Debug, Serialize, Deserialize)]
 struct KanjiDictEntries {
-    #[serde(rename = "character")]
+    #[serde(rename(deserialize = "character"))]
     entries: Vec<KanjiCharacter>,
 }
 
-async fn dump_to_sqlite(pool: &Pool<Sqlite>, entries: &JmDictEntries) {
+async fn dump_jmdict_to_sqlite(pool: &Pool<Sqlite>, entries: &JmDictEntries) {
     let create_tables = fs::read_to_string("create_tables.sql").unwrap();
 
     query(&create_tables).execute(pool).await.unwrap();
@@ -294,6 +294,39 @@ async fn dump_to_sqlite(pool: &Pool<Sqlite>, entries: &JmDictEntries) {
     tx.commit().await.unwrap();
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+struct KanjiDictDbJsonEntry {
+    body: String,
+    json_data: String,
+}
+
+async fn dump_kanjidic_to_sqlite(pool: &Pool<Sqlite>, entries: &KanjiDictEntries) {
+    // just dump it to json, i dont need to search through this,
+    // the schema is bloated (like 20mb for 2mb of xml) but i dont care
+
+    let json_mapped: Vec<KanjiDictDbJsonEntry> = entries
+        .entries
+        .iter()
+        .map(|e| KanjiDictDbJsonEntry {
+            body: e.literal.clone(),
+            json_data: serde_json::to_string(e).unwrap(),
+        })
+        .collect();
+
+    let mut tx = pool.begin().await.unwrap();
+
+    for json_entry in json_mapped {
+        query("INSERT INTO KanjidicEntry(body, json_data) VALUES (?, ?)")
+            .bind(&json_entry.body)
+            .bind(&json_entry.json_data)
+            .execute(&mut *tx)
+            .await
+            .unwrap();
+    }
+
+    tx.commit().await.unwrap();
+}
+
 #[derive(Debug, sqlx::FromRow)]
 struct ReadingElementDbEntry {
     id: i64,
@@ -339,8 +372,6 @@ async fn create_indexes(pool: &Pool<Sqlite>) {
     query(&create_indexes).execute(pool).await.unwrap();
 }
 
-async fn dump_kanjidic(pool: &Pool<Sqlite>) {}
-
 #[tokio::main]
 async fn main() {
     let dictionary_xml = fs::read_to_string("../JMdict_e.xml").unwrap();
@@ -356,13 +387,14 @@ async fn main() {
         .await
         .unwrap();
 
-    //let kanji_xml = fs::read_to_string("../kanjidic2.xml").unwrap();
-    //let kanji_entries: KanjiDictEntries = quick_xml::de::from_str(&kanji_xml).unwrap();
+    let kanji_xml = fs::read_to_string("../kanjidic2.xml").unwrap();
+    let kanji_entries: KanjiDictEntries = quick_xml::de::from_str(&kanji_xml).unwrap();
 
     //println!("{:?}", kanji_entries.entries.iter().take(10));
 
-    dump_to_sqlite(&pool, &entries).await;
+    dump_jmdict_to_sqlite(&pool, &entries).await;
     create_romaji_indexes(&pool).await;
+    dump_kanjidic_to_sqlite(&pool, &kanji_entries).await;
     create_indexes(&pool).await;
 }
 
@@ -372,3 +404,4 @@ async fn main() {
 // 91.0 mb with romaji indexes + fts indexes + fk indexes
 // 103.0 mb with romaji indexes + fts indexes + fk indexes + first letter indexes
 // 104.0 mb with romaji indexes + fts indexes + fk indexes + first letter indexes + kanji information
+// 123.0 mb with romaji indexes + fts indexes + fk indexes + first letter indexes + kanji information + kanjidic stuff

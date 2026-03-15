@@ -30,19 +30,4 @@ object DictionaryModule {
 
         return db.dictionaryDao()
     }
-
-    @Provides
-    @Singleton
-    fun provideDictionaryRepository(dictionaryDao: DictionaryDao): DictionaryRepository {
-        return DictionaryRepository(dictionaryDao)
-    }
-
-    @Singleton
-    @Provides
-    fun provideSearchAndFormatUseCase(
-        @ApplicationContext context: Context,
-        dictionaryRepository: DictionaryRepository
-    ): SearchAndFormatDictionaryEntriesUseCase {
-        return SearchAndFormatDictionaryEntriesUseCase(dictionaryRepository, context)
-    }
 }
