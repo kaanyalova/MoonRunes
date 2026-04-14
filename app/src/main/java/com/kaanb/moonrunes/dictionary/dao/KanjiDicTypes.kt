@@ -1,10 +1,11 @@
 package com.kaanb.moonrunes.dictionary.dao
 
+import androidx.compose.ui.graphics.Path
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class KanjiCharacter(
+data class KanjiDicCharacter(
     val literal: String,
     val codepoints: KanjiCodepointGroup,
     val radicals: KanjiRadicalGroup,
@@ -15,6 +16,19 @@ data class KanjiCharacter(
     val queryCodes: KanjiQueryCodeGroup = KanjiQueryCodeGroup(),
     @SerialName("reading_meaning")
     val readingMeaning: KanjiReadingMeaning = KanjiReadingMeaning()
+)
+
+
+@Serializable
+data class KanjiDicCharacterWithStrokes(
+    val kanjiDicEntry: KanjiDicCharacter,
+    val strokes: List<List<PathPiece>>
+)
+
+@Serializable
+data class KanjiDicCharacterWithPaths(
+    val kanjiDicEntry: KanjiDicCharacter,
+    val paths: List<Path>
 )
 
 @Serializable
@@ -110,5 +124,36 @@ data class KanjiMeaning(
 
 @Serializable
 data class KanjiDictEntries(
-    val entries: List<KanjiCharacter>
+    val entries: List<KanjiDicCharacter>
 )
+
+
+@Serializable
+sealed class PathPiece {
+    @Serializable
+    @SerialName("MoveTo")
+    data class MoveTo(val x: Float, val y: Float) : PathPiece()
+
+    @Serializable
+    @SerialName("LineTo")
+    data class LineTo(val x: Float, val y: Float) : PathPiece()
+
+    @Serializable
+    @SerialName("QuadTo")
+    data class QuadTo(
+        val x1: Float, val y1: Float,
+        val x: Float, val y: Float
+    ) : PathPiece()
+
+    @Serializable
+    @SerialName("CubicTo")
+    data class CubicTo(
+        val x1: Float, val y1: Float,
+        val x2: Float, val y2: Float,
+        val x: Float, val y: Float
+    ) : PathPiece()
+
+    @Serializable
+    @SerialName("Close")
+    data object Close : PathPiece()
+}

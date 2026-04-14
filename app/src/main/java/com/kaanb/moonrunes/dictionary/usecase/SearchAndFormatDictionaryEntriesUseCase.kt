@@ -1,7 +1,7 @@
 package com.kaanb.moonrunes.dictionary.usecase
 
 import android.content.Context
-import com.kaanb.moonrunes.dictionary.dao.KanjiCharacter
+import com.kaanb.moonrunes.dictionary.dao.KanjiDicCharacter
 import com.kaanb.moonrunes.dictionary.repository.DictionaryRepository
 import com.kaanb.moonrunes.dictionary.util.DictionaryEntry
 import com.kaanb.moonrunes.dictionary.util.formatDictionaryEntry
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 data class DictionaryEntryWithKanjiDicData(
     val dictionaryEntry: DictionaryEntry,
-    val kanjiDicEntry: Map<String, KanjiCharacter>
+    val kanjiDicEntry: Map<String, KanjiDicCharacter>
 )
 
 class SearchAndFormatDictionaryEntriesUseCase @Inject constructor(

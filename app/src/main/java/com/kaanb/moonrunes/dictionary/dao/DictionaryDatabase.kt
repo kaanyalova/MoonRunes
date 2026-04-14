@@ -54,6 +54,8 @@ data class KanjiDicEntry(
     val body: String,
     @ColumnInfo(name = "json_data")
     val jsonData: String,
+    @ColumnInfo(name= "svg_data")
+    val svgData: String?
 )
 
 

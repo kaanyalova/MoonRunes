@@ -3,8 +3,9 @@ package com.kaanb.moonrunes.dictionary.repository
 import android.util.Log
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDao
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDatabaseEntry
-import com.kaanb.moonrunes.dictionary.dao.KanjiCharacter
-import com.kaanb.moonrunes.dictionary.dao.KanjiDicEntry
+import com.kaanb.moonrunes.dictionary.dao.KanjiDicCharacter
+import com.kaanb.moonrunes.dictionary.dao.KanjiDicCharacterWithStrokes
+import com.kaanb.moonrunes.dictionary.dao.PathPiece
 import com.kaanb.moonrunes.dictionary.dao.searchTopNEntriesByDefinitionRawQuery
 import com.kaanb.moonrunes.dictionary.dao.searchTopNEntriesByKanjiRawQuery
 import com.kaanb.moonrunes.dictionary.dao.searchTopNEntriesByReadingRawQuery
@@ -97,10 +98,15 @@ class DictionaryRepository @Inject constructor(private val dictionaryDao: Dictio
         return dictionaryDao.getEntryById(id)
     }
 
-    fun getKanjiDicEntry(kanji: String): KanjiCharacter {
+    fun getKanjiDicEntry(kanji: String): KanjiDicCharacterWithStrokes {
         val rawEntry = dictionaryDao.getKanjiDicEntry(kanji)
-        val serialized = Json.decodeFromString<KanjiCharacter>(rawEntry.jsonData)
-        return serialized
+
+        val serializedCharacter = Json.decodeFromString<KanjiDicCharacter>(rawEntry.jsonData)
+        val serializedStrokes = Json.decodeFromString<List<List<PathPiece>>>(rawEntry.svgData?: "")
+
+        return KanjiDicCharacterWithStrokes(
+            serializedCharacter, serializedStrokes
+        )
     }
 
 }

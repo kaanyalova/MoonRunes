@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::{
     Connection, Pool, Sqlite, SqliteConnection, SqlitePool, query, query_as,
     sqlite::{SqliteConnectOptions, SqlitePoolOptions},
+    types::Json,
 };
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -298,6 +299,7 @@ async fn dump_jmdict_to_sqlite(pool: &Pool<Sqlite>, entries: &JmDictEntries) {
 struct KanjiDictDbJsonEntry {
     body: String,
     json_data: String,
+    svg_data: Option<String>,
 }
 
 async fn dump_kanjidic_to_sqlite(pool: &Pool<Sqlite>, entries: &KanjiDictEntries) {
@@ -310,15 +312,17 @@ async fn dump_kanjidic_to_sqlite(pool: &Pool<Sqlite>, entries: &KanjiDictEntries
         .map(|e| KanjiDictDbJsonEntry {
             body: e.literal.clone(),
             json_data: serde_json::to_string(e).unwrap(),
+            svg_data: None,
         })
         .collect();
 
     let mut tx = pool.begin().await.unwrap();
 
     for json_entry in json_mapped {
-        query("INSERT INTO KanjidicEntry(body, json_data) VALUES (?, ?)")
+        query("INSERT INTO KanjiDicEntry(body, json_data, svg_data) VALUES (?, ?, ?)")
             .bind(&json_entry.body)
             .bind(&json_entry.json_data)
+            .bind(&json_entry.svg_data)
             .execute(&mut *tx)
             .await
             .unwrap();
@@ -372,6 +376,162 @@ async fn create_indexes(pool: &Pool<Sqlite>) {
     query(&create_indexes).execute(pool).await.unwrap();
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+struct Coord {
+    x: f32,
+    y: f32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Path {
+    #[serde(flatten)]
+    paths: Vec<Coord>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct KanjiStrokes {
+    #[serde(flatten)]
+    strokes: Vec<Path>,
+}
+
+use usvg::tiny_skia_path::PathSegment as UsvgPathSegment;
+
+#[derive(Serialize)]
+#[serde(tag = "type")]
+pub enum CanvasPathSegment {
+    MoveTo {
+        x: f32,
+        y: f32,
+    },
+    LineTo {
+        x: f32,
+        y: f32,
+    },
+    QuadTo {
+        x1: f32,
+        y1: f32,
+        x: f32,
+        y: f32,
+    },
+    CubicTo {
+        x1: f32,
+        y1: f32,
+        x2: f32,
+        y2: f32,
+        x: f32,
+        y: f32,
+    },
+    Close,
+}
+
+pub fn paths_to_json(paths: Vec<Vec<CanvasPathSegment>>, pretty: bool) -> String {
+    if pretty {
+        serde_json::to_string_pretty(&paths).unwrap()
+    } else {
+        serde_json::to_string(&paths).unwrap()
+    }
+}
+
+pub fn extract_svg_paths(svg_data: &str) -> Vec<Vec<CanvasPathSegment>> {
+    // i hate xml, i hate xml, i hate xml, i hate xml, i hate xml
+    let cleaned_svg = svg_data.replace("kvg:", "");
+
+    let options = usvg::Options::default();
+    let tree = usvg::Tree::from_str(&cleaned_svg, &options).unwrap();
+
+    let mut paths_vec = Vec::new();
+    walk_group(&tree.root(), &mut paths_vec);
+
+    paths_vec
+}
+
+fn walk_group(group: &usvg::Group, paths_vec: &mut Vec<Vec<CanvasPathSegment>>) {
+    for node in group.children() {
+        match node {
+            usvg::Node::Path(path) => {
+                let mut segments = Vec::new();
+                for seg in path.data().segments() {
+                    match seg {
+                        UsvgPathSegment::MoveTo(p) => {
+                            segments.push(CanvasPathSegment::MoveTo { x: p.x, y: p.y })
+                        }
+                        UsvgPathSegment::LineTo(p) => {
+                            segments.push(CanvasPathSegment::LineTo { x: p.x, y: p.y })
+                        }
+                        UsvgPathSegment::QuadTo(p1, p) => {
+                            segments.push(CanvasPathSegment::QuadTo {
+                                x1: p1.x,
+                                y1: p1.y,
+                                x: p.x,
+                                y: p.y,
+                            })
+                        }
+                        UsvgPathSegment::CubicTo(p1, p2, p) => {
+                            segments.push(CanvasPathSegment::CubicTo {
+                                x1: p1.x,
+                                y1: p1.y,
+                                x2: p2.x,
+                                y2: p2.y,
+                                x: p.x,
+                                y: p.y,
+                            })
+                        }
+                        UsvgPathSegment::Close => segments.push(CanvasPathSegment::Close),
+                    }
+                }
+                if !segments.is_empty() {
+                    paths_vec.push(segments);
+                }
+            }
+            usvg::Node::Group(g) => walk_group(g, paths_vec),
+            _ => {}
+        }
+    }
+}
+
+fn filename_to_kanji(filename: &str) -> Option<char> {
+    let hex_part = filename.strip_suffix(".svg").unwrap_or(filename);
+
+    if let Ok(num) = u32::from_str_radix(hex_part, 16) {
+        std::char::from_u32(num)
+    } else {
+        None
+    }
+}
+
+fn parse_kanji_svgs() -> Vec<(String, String)> {
+    let kanji_svgs = fs::read_dir("kanji/").unwrap();
+
+    kanji_svgs
+        .filter_map(|svg| {
+            let path = svg.unwrap().path();
+            let file_name = path.file_name()?.to_str()?;
+            let kanji_char = filename_to_kanji(file_name)?;
+
+            let file = fs::read_to_string(&path).unwrap();
+            let svg_paths = extract_svg_paths(&file);
+            let to_json = paths_to_json(svg_paths, false);
+
+            Some((kanji_char.to_string(), to_json))
+        })
+        .collect()
+}
+
+async fn update_kanji_svg_data(pool: &Pool<Sqlite>, svgs: &[(String, String)]) {
+    let mut tx = pool.begin().await.unwrap();
+
+    for (kanji_str, svg_json) in svgs {
+        query("UPDATE KanjiDicEntry SET svg_data = ? WHERE body = ?")
+            .bind(svg_json)
+            .bind(kanji_str)
+            .execute(&mut *tx)
+            .await
+            .unwrap();
+    }
+
+    tx.commit().await.unwrap();
+}
+
 #[tokio::main]
 async fn main() {
     let dictionary_xml = fs::read_to_string("../JMdict_e.xml").unwrap();
@@ -390,11 +550,12 @@ async fn main() {
     let kanji_xml = fs::read_to_string("../kanjidic2.xml").unwrap();
     let kanji_entries: KanjiDictEntries = quick_xml::de::from_str(&kanji_xml).unwrap();
 
-    //println!("{:?}", kanji_entries.entries.iter().take(10));
+    let kanji_svgs = parse_kanji_svgs();
 
     dump_jmdict_to_sqlite(&pool, &entries).await;
     create_romaji_indexes(&pool).await;
     dump_kanjidic_to_sqlite(&pool, &kanji_entries).await;
+    update_kanji_svg_data(&pool, &kanji_svgs).await;
     create_indexes(&pool).await;
 }
 
@@ -405,3 +566,4 @@ async fn main() {
 // 103.0 mb with romaji indexes + fts indexes + fk indexes + first letter indexes
 // 104.0 mb with romaji indexes + fts indexes + fk indexes + first letter indexes + kanji information
 // 123.0 mb with romaji indexes + fts indexes + fk indexes + first letter indexes + kanji information + kanjidic stuff
+// 146.0 mb with romaji indexes + fts indexes + fk indexes + first letter indexes + kanji information + kanjidic stuff + svgs

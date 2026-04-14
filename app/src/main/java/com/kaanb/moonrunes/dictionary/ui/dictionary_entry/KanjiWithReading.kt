@@ -1,5 +1,6 @@
 package com.kaanb.moonrunes.dictionary.ui.dictionary_entry
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.MaterialTheme
@@ -14,17 +15,21 @@ import androidx.compose.ui.unit.dp
 fun SingleKanjiWithReading(
     kanji: String,
     reading: String,
+    modifier: Modifier = Modifier
 ) {
-    Column() {
-        Text(
-            reading, style = MaterialTheme.typography.bodyLarge,
-            // this is disgusting, but cjk fonts are all equal squares, so it should work
-            modifier = Modifier.offset(y = 10.dp, x = 1.dp)
-        )
-        Text(
-            kanji, style = MaterialTheme.typography.displayMedium
-        )
+    Box(modifier = modifier) {
+        Column {
+            Text(
+                reading, style = MaterialTheme.typography.bodyLarge,
+                // this is disgusting, but cjk fonts are all equal squares, so it should work
+                modifier = Modifier.offset(y = 10.dp, x = 1.dp)
+            )
+            Text(
+                kanji, style = MaterialTheme.typography.displayMedium
+            )
+        }
     }
+
 }
 
 @Preview

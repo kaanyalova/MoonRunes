@@ -29,9 +29,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val context = LocalContext.current
 
-                    LaunchedEffect(true) {
-                        decompressDictionaries(context)
-                    }
+                    decompressDictionaries(context)
 
                     NavigationRoot(innerPadding)
 

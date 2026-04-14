@@ -22,10 +22,15 @@ class DictionaryEntryViewModel @AssistedInject constructor(
     getDictionaryEntryByIdUseCase: GetDictionaryEntryByIdUseCase,
     @Assisted private val id: Long
 ) : ViewModel() {
+
+
+
     private val _uiState = MutableStateFlow(DictionaryEntryUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
+
+
         _uiState.update { state ->
             state.copy(
                 entry = getDictionaryEntryByIdUseCase(id)

@@ -28,9 +28,7 @@ fun NavigationRoot(innerPadding: PaddingValues) {
                 DictionarySearchScreen(
                     innerPadding = innerPadding,
                     // todo: should i put these here, or in the viewmodel?
-                    onNavigateToEntry = { id ->
-                        backStack.add(Route.DictionaryEntry(id))
-                    })
+                   )
             }
 
             entry<Route.DictionaryEntry> { key ->

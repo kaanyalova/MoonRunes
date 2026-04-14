@@ -5,7 +5,8 @@ import dev.esnault.wanakana.core.Wanakana
 
 enum class TextType {
     Romaji, // Either a definition lookup or japanese word written in romaji
-    ContainsKanji, HiraganaOrKatakana,
+    ContainsKanji,
+    HiraganaOrKatakana,
 }
 
 fun detectTextType(input: String): TextType {
@@ -28,5 +29,8 @@ fun containsKanji(input: String): Boolean {
 
 fun extractKanji(input: String): List<String> {
     val tokens = Wanakana.tokenize(input)
-    return tokens.filter { token -> Wanakana.isKanji(token) }.toList().distinct()
+    return tokens.filter { token -> Wanakana.isKanji(token) }
+        .flatMap { kanji -> kanji.toList() }
+        .distinct()
+        .map { kanji -> kanji.toString() }
 }

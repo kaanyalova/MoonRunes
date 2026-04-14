@@ -63,5 +63,6 @@ CREATE TABLE IF NOT EXISTS KanjiInformation (
 CREATE TABLE IF NOT EXISTS KanjiDicEntry (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     body TEXT NOT NULL,
-    json_data TEXT NOT NULL
+    json_data TEXT NOT NULL,
+    svg_data TEXT
 );
