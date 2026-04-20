@@ -27,3 +27,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "MoonRunes"
 include(":app")
+include(":fsrs_jni")

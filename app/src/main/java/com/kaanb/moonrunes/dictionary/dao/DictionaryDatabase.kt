@@ -241,6 +241,8 @@ interface DictionaryDao {
     ],
     version = 1
 )
+
+
 abstract class DictionaryDatabase : RoomDatabase() {
     abstract fun dictionaryDao(): DictionaryDao
 }

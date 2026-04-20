@@ -1,4 +1,12 @@
 [workspace]
 resolver = "3"
 
-members = ["dictionaries/dictionary_to_sqlite/"]
+members = [
+    "dictionaries/dictionary_to_sqlite/",
+    "fsrs_jni_rs/",
+    "fsrs_jni_rs/vendor/systemstat",
+]
+
+
+[patch.crates-io]
+systemstat = { path = "fsrs_jni_rs/vendor/systemstat" }

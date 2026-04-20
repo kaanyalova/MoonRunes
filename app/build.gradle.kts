@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.material3.adaptive.navigation3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
+    implementation(project(":fsrs_jni"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

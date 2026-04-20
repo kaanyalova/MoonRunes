@@ -15,6 +15,7 @@ fun searchTopNEntriesByReadingRawQuery(
             JOIN ReadingElement re ON re.entry_fk = e.id
             JOIN ReadingElementFts re_fts ON re_fts.rowid = re.id
             WHERE re_fts.body MATCH :input
+            ORDER BY re.body = :input DESC, length(re.body) ASC
             LIMIT :n
         """.trimIndent(),
 
@@ -39,6 +40,7 @@ fun searchTopNEntriesByDefinitionRawQuery(
             JOIN Definition d ON d.sense_fk = s.id
             JOIN DefinitionFts d_fts ON d_fts.rowid = d.id
             WHERE d_fts.body MATCH :input
+            ORDER BY d.body = :input DESC, length(d.body) ASC
             LIMIT :n
         """.trimIndent(),
 
@@ -61,6 +63,7 @@ fun searchTopNEntriesByKanjiRawQuery(
         JOIN KanjiElement ke ON ke.entry_fk = e.id
         JOIN KanjiElementFts ke_fts ON ke_fts.rowid = ke.id
         WHERE ke_fts.body MATCH :input
+        ORDER BY ke.body = :input DESC, length(ke.body) ASC
         LIMIT :n
     """.trimIndent(),
 
@@ -82,13 +85,15 @@ fun searchTopNEntriesByRomajiReadingRawQuery(
             SELECT e.* FROM Entry e
             JOIN RomajiReadingElement re ON re.entry_fk = e.id
             JOIN RomajiReadingElementFts re_fts ON re_fts.rowid = re.id
-            WHERE re_fts.body MATCH :input
+            WHERE re_fts.body MATCH :input_wildcard
+            ORDER BY re.body = :input DESC, length(re.body) ASC
             LIMIT :n
         """.trimIndent(),
 
         onBindStatement = {
             it.bindText(1, "$input*")
-            it.bindInt(2, n)
+            it.bindText(2, input)
+            it.bindInt(3, n)
         })
 
     val topN = dao.searchTopNEntriesByRomajiReading(query)

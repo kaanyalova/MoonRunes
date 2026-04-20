@@ -2,6 +2,7 @@ package com.kaanb.moonrunes.dictionary.di
 
 import android.content.Context
 import androidx.room.Room
+import com.kaanb.fsrs_jni.FsrsJni
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDao
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDatabase
 import com.kaanb.moonrunes.dictionary.repository.DictionaryRepository
@@ -29,5 +30,11 @@ object DictionaryModule {
         ).openHelperFactory(RequerySQLiteOpenHelperFactory()).allowMainThreadQueries().build()
 
         return db.dictionaryDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideJniFsrs(): FsrsJni {
+        return FsrsJni()
     }
 }
