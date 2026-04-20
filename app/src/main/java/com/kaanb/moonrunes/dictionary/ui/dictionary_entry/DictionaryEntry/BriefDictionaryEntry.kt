@@ -1,4 +1,4 @@
-package com.kaanb.moonrunes.dictionary.ui.dictionary_entry
+package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DictionaryEntry
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column

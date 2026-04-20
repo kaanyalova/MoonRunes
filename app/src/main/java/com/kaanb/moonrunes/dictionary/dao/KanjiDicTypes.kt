@@ -15,7 +15,9 @@ data class KanjiDicCharacter(
     @SerialName("query_codes")
     val queryCodes: KanjiQueryCodeGroup = KanjiQueryCodeGroup(),
     @SerialName("reading_meaning")
-    val readingMeaning: KanjiReadingMeaning = KanjiReadingMeaning()
+    val readingMeaning: KanjiReadingMeaning = KanjiReadingMeaning(),
+    @SerialName("make_up_radicals")
+    val makeUpRadicals: List<String> = emptyList()
 )
 
 

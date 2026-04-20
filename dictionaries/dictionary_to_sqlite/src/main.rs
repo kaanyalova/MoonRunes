@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs;
 
 use serde::{Deserialize, Serialize};
@@ -72,6 +73,8 @@ struct KanjiCharacter {
     query_codes: KanjiQueryCodeGroup,
     #[serde(default)]
     reading_meaning: KanjiReadingMeaning,
+    #[serde(default)]
+    make_up_radicals: Vec<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -500,7 +503,7 @@ fn filename_to_kanji(filename: &str) -> Option<char> {
 }
 
 fn parse_kanji_svgs() -> Vec<(String, String)> {
-    let kanji_svgs = fs::read_dir("data/kanjivg").unwrap();
+    let kanji_svgs = fs::read_dir("kanji").unwrap();
 
     kanji_svgs
         .filter_map(|svg| {
@@ -532,6 +535,28 @@ async fn update_kanji_svg_data(pool: &Pool<Sqlite>, svgs: &[(String, String)]) {
     tx.commit().await.unwrap();
 }
 
+fn parse_kradfile(path: &str) -> HashMap<String, Vec<String>> {
+    let bytes = fs::read(path).unwrap();
+    let (decoded, _, _) = encoding_rs::EUC_JP.decode(&bytes);
+
+    let mut kanji_to_radicals: HashMap<String, Vec<String>> = HashMap::new();
+
+    for line in decoded.lines() {
+        if line.starts_with('#') {
+            continue;
+        }
+
+        let parts: Vec<&str> = line.split(" : ").collect();
+        if parts.len() == 2 {
+            let kanji = parts[0].to_string();
+            let radicals = parts[1].split_whitespace().map(|s| s.to_string()).collect();
+            kanji_to_radicals.insert(kanji, radicals);
+        }
+    }
+
+    kanji_to_radicals
+}
+
 #[tokio::main]
 async fn main() {
     let dictionary_xml = fs::read_to_string("../JMdict_e.xml").unwrap();
@@ -548,7 +573,14 @@ async fn main() {
         .unwrap();
 
     let kanji_xml = fs::read_to_string("../kanjidic2.xml").unwrap();
-    let kanji_entries: KanjiDictEntries = quick_xml::de::from_str(&kanji_xml).unwrap();
+    let mut kanji_entries: KanjiDictEntries = quick_xml::de::from_str(&kanji_xml).unwrap();
+
+    let krad_map = parse_kradfile("kradfile");
+    for entry in &mut kanji_entries.entries {
+        if let Some(radicals) = krad_map.get(&entry.literal) {
+            entry.make_up_radicals = radicals.clone();
+        }
+    }
 
     let kanji_svgs = parse_kanji_svgs();
 

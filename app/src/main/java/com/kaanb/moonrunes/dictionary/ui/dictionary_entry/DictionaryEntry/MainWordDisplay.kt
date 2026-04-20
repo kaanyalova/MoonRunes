@@ -1,4 +1,4 @@
-package com.kaanb.moonrunes.dictionary.ui.dictionary_entry
+package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DictionaryEntry
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

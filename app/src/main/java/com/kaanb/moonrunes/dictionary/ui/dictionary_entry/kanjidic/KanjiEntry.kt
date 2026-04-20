@@ -1,76 +1,169 @@
 package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.kanjidic
 
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kaanb.moonrunes.dictionary.dao.KanjiDicCharacter
-import com.kaanb.moonrunes.dictionary.dao.KanjiDicEntry
 import com.kaanb.moonrunes.dictionary.dao.PathPiece
-import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.KanjiStrokeRenderer.KanjiStrokeGrid
-import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.KanjiStrokeRenderer.KanjiStrokePlayer
-import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.SingleKanjiWithReading
-import com.kaanb.moonrunes.dictionary.util.KanjiWithSingleReading
+import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.kanjidic.KanjiStrokeRenderer.KanjiStrokeGrid
+import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.kanjidic.KanjiStrokeRenderer.KanjiStrokePlayer
+import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.NumberCircle
+import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DictionaryEntry.SingleKanjiWithReading
 import com.kaanb.moonrunes.dictionary.util.getRidOfTheWeirdFormattingOfKunReadings
 import com.kaanb.moonrunes.dictionary.util.kanjiStrokesToComposePaths
+import com.kaanb.moonrunes.ui.theme.MoonRunesTheme
 import kotlinx.serialization.json.Json
 
 @Composable
 fun KanjiEntry(
-    modifier: Modifier = Modifier,
-    kanjiDicCharacter: KanjiDicCharacter,
-    strokes: List<Path>
+    modifier: Modifier = Modifier, kanjiDicCharacter: KanjiDicCharacter, strokes: List<Path>
 ) {
-    OutlinedCard(
+    Surface(
         modifier = modifier
-
+            .verticalScroll(rememberScrollState())
             .fillMaxWidth()
     ) {
 
-        Column(modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 20.dp)) {
             SingleKanjiWithReading(
                 kanji = kanjiDicCharacter.literal,
-                reading = getRidOfTheWeirdFormattingOfKunReadings(
-                    kanjiDicCharacter.readingMeaning.group.readings.find { reading -> reading.readingType == "ja_kun" }?.body
-                        ?: ""
+                reading = "" // No reading here duh!
+            )
+
+            // Small Misc
+            Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                Text(
+                    text = "${kanjiDicCharacter.misc.strokeCount.first().toString()} Strokes",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium
+
                 )
-            )
+
+                Text(
+                    text = "Taught in grade ${kanjiDicCharacter.misc.grade}",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
+            // TODO: Add JLPT level here
 
 
-            // Misc
-            Text(
-                text = "${kanjiDicCharacter.misc.strokeCount.first().toString()} Strokes",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.labelMedium
+            // Radicals
+            OutlinedCard(modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth()) {
+                Text("Radicals", modifier.padding(start = 12.dp, end= 12.dp, top = 12.dp), style = MaterialTheme.typography.titleMedium)
 
-            )
-
-            Text(
-                text = "Taught in grade ${kanjiDicCharacter.misc.grade}",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.labelMedium
-            )
+            }
 
 
-            KanjiStrokePlayer(
-                modifier = Modifier.padding(vertical = 8.dp),
-                strokes = strokes,
-                scale = 3.0f
-            )
+            // Readings, we only care about ja_on and ja_kun
+
+            OutlinedCard(modifier = Modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth()) {
+                Text("Readings", modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp), style = MaterialTheme.typography.titleMedium)
+
+                val onReadings = kanjiDicCharacter.readingMeaning.group.readings
+                    .filter { r -> r.readingType == "ja_on" }
+                    .map { r -> r.body }
+                    .joinToString(", ")
+
+                val kunReadings = kanjiDicCharacter.readingMeaning.group.readings
+                    .filter { r -> r.readingType == "ja_kun" }
+                    .map { r -> r.body }
+                    .joinToString(", ")
+
+
+                if (kunReadings.isNotEmpty()) {
+                    Row(modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 4.dp)) {
+                        Text("Kun:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleSmall, modifier = Modifier.alignByBaseline().padding(end = 4.dp))
+                        Text(kunReadings, modifier = Modifier.alignByBaseline())
+                    }
+
+                }
+
+                if (onReadings.isNotEmpty()) {
+                    Row(modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp)) {
+                        Text("On:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleSmall, modifier = Modifier.alignByBaseline().padding(end = 4.dp))
+                        Text(onReadings, modifier = Modifier.alignByBaseline())
+                    }
+                }
+
+            }
+
+
+
+
+            // the language "" is english, for some reason
+            kanjiDicCharacter.readingMeaning.group.meanings.filter { it -> it.language == "" }
+
+            val meanings =
+                kanjiDicCharacter.readingMeaning.group.meanings.filter { m -> m.language == "" }
+                    .map { m -> m.body }
+
+            OutlinedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+
+                Text(
+                    "Meanings",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                )
+
+                Column(
+                    modifier = Modifier.padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    meanings.forEachIndexed { i, meaning ->
+                        Row() {
+                            NumberCircle(
+                                i + 1,
+                                modifier = Modifier
+                                    .alignByBaseline()
+                                    .padding(end = 8.dp)
+                            )
+                            Text(
+                                text = meaning,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.alignByBaseline()
+                            )
+                        }
+
+                    }
+
+                }
+            }
+
+
+            
+            // Radicals
+
 
 
             KanjiStrokeGrid(
-                modifier = Modifier.padding( vertical = 8.dp),
+                modifier = Modifier.padding(vertical = 8.dp),
                 strokes = strokes,
-                scale = 3.0f
+                scale = 2f,
+                showNumber = false,
             )
+
 
         }
     }
@@ -375,6 +468,9 @@ private fun KanjiEntryPreview() {
 
     val paths = kanjiStrokesToComposePaths(value)
 
-    KanjiEntry(kanjiDicCharacter = parsed, strokes = paths)
+    MoonRunesTheme() {
+        KanjiEntry(kanjiDicCharacter = parsed, strokes = paths)
+
+    }
 
 }

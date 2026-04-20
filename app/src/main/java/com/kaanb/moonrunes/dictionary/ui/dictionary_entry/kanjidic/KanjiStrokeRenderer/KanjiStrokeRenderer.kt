@@ -1,4 +1,4 @@
-package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.KanjiStrokeRenderer
+package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.kanjidic.KanjiStrokeRenderer
 
 import android.util.Log
 import androidx.compose.animation.core.Animatable
@@ -11,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,6 +66,7 @@ fun KanjiStrokeAnimatedRenderer(
 
     val density = LocalDensity.current.density
     val scaleBasedOnDensity = scale * density * 1 / 3
+    val strokeColor = MaterialTheme.colorScheme.onSurface
 
     val scaledStrokes = remember(strokes, scaleBasedOnDensity) {
         scalePaths(strokes, scaleBasedOnDensity)
@@ -90,7 +93,7 @@ fun KanjiStrokeAnimatedRenderer(
         samplePaths(scaledStrokes, animations).forEach { stroke ->
             drawPath(
                 stroke,
-                color = androidx.compose.ui.graphics.Color.Black,
+                color = strokeColor,
                 style = Stroke(
                     width = (2 * scaleBasedOnDensity),
                     cap = StrokeCap.Round
@@ -107,6 +110,7 @@ fun KanjiStrokeAnimatedRenderer(
 fun KanjiStrokeRenderer(modifier: Modifier = Modifier, strokes: List<Path>, scale: Float = 1.0f) {
     val density = LocalDensity.current.density
     val scaleBasedOnDensity = scale * density * 1 / 3
+    val strokeColor = MaterialTheme.colorScheme.onSurface
 
     val scaledStrokes = remember(strokes, scaleBasedOnDensity) {
         scalePaths(strokes, scaleBasedOnDensity)
@@ -116,7 +120,7 @@ fun KanjiStrokeRenderer(modifier: Modifier = Modifier, strokes: List<Path>, scal
         scaledStrokes.forEach { stroke ->
             drawPath(
                 stroke,
-                color = androidx.compose.ui.graphics.Color.Black,
+                color = strokeColor,
                 style = Stroke(
                     width = (2 * scaleBasedOnDensity),
                     cap = StrokeCap.Round

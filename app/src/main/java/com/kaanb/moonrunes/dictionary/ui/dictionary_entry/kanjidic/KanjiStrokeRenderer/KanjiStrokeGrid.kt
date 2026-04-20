@@ -1,17 +1,24 @@
-package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.KanjiStrokeRenderer
+package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.kanjidic.KanjiStrokeRenderer
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -31,36 +38,54 @@ import kotlinx.serialization.json.Json
 
 
 @Composable
-fun KanjiStrokeGrid(strokes: List<Path>,scale: Float = 3.0f,  modifier: Modifier = Modifier) {
+fun KanjiStrokeGrid(
+    strokes: List<Path>,
+    scale: Float = 3.0f,
+    modifier: Modifier = Modifier,
+    showNumber: Boolean = true
+) {
 
     val density = LocalDensity.current.density
     val scaleBasedOnDensity = scale * density * 1 / 3
+    val strokeColor = MaterialTheme.colorScheme.onSurface
     val scaledStrokes = remember(strokes, scaleBasedOnDensity) {
         scalePaths(strokes = strokes, scaleBasedOnDensity)
     }
 
 
+
     OutlinedCard(modifier) {
+        Text("Stroke Order", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp))
+
+        KanjiStrokePlayer(
+            modifier = Modifier.padding(12.dp), strokes = strokes, scale = 2.5f
+        )
+
+        HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp))
+
         LazyVerticalGrid(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
-            columns = GridCells.Adaptive(minSize = (KANJIVG_VIEWBOX_SIZE * scale).dp)
-            , modifier = Modifier.padding(8.dp)
+            columns = GridCells.Adaptive(minSize = (KANJIVG_VIEWBOX_SIZE * scale).dp),
+            modifier = Modifier.padding(12.dp).heightIn(max = 5000.dp),
+            userScrollEnabled = false,
+
         ) {
-            itemsIndexed(scaledStrokes) {
-                    i, _stroke ->
-                ElevatedCard(modifier= Modifier.padding() ) {
+            itemsIndexed(scaledStrokes) { i, _stroke ->
+                ElevatedCard(modifier = Modifier.padding()) {
                     Box(Modifier.padding(8.dp)) {
-                        NumberCircle(i + 1, modifier= Modifier.padding(2.dp))
+                        if (showNumber) {
+                            NumberCircle(i + 1, modifier = Modifier.padding(2.dp))
+                        }
                         Box(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.Center
                         ) {
                             Canvas(modifier = Modifier.size((KANJIVG_VIEWBOX_SIZE * scale).dp)) {
-                                for (strokeIndex in 0..i) {
+                                for (strokeIndex in 0..i - 1) {
                                     drawPath(
                                         scaledStrokes[strokeIndex],
-                                        color = Color.Black,
+                                        color = strokeColor,
                                         style = Stroke(
                                             width = (2 * scaleBasedOnDensity), // scale these up by the screen density
                                             cap = StrokeCap.Round
@@ -68,6 +93,14 @@ fun KanjiStrokeGrid(strokes: List<Path>,scale: Float = 3.0f,  modifier: Modifier
                                     )
                                 }
 
+                                drawPath(
+                                    scaledStrokes[i],
+                                    color = Color.Red,
+                                    style = Stroke(
+                                        width = (2 * scaleBasedOnDensity),
+                                        cap = StrokeCap.Round
+                                    )
+                                )
                             }
                         }
 
@@ -95,8 +128,8 @@ private fun KanjiStrokeGridPreview() {
 
     val paths = kanjiStrokesToComposePaths(value)
 
-    Surface(modifier= Modifier.padding(8.dp)) {
-        KanjiStrokeGrid( paths)
+    Surface(modifier = Modifier.padding(8.dp)) {
+        KanjiStrokeGrid(paths)
 
     }
 

@@ -15,12 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDatabaseEntry
 import com.kaanb.moonrunes.dictionary.repository.DictionaryRepository
-import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DetailedDictionaryEntry
-import com.kaanb.moonrunes.dictionary.util.decompressDictionaries
+import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DictionaryEntry.DetailedDictionaryEntry
 import com.kaanb.moonrunes.dictionary.util.formatDictionaryEntry
 
 @Composable
