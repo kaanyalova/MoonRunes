@@ -557,6 +557,17 @@ fn parse_kradfile(path: &str) -> HashMap<String, Vec<String>> {
     kanji_to_radicals
 }
 
+fn populate_radicals(
+    krad_map: &HashMap<String, Vec<String>>,
+    kanji_entries: &mut KanjiDictEntries,
+) {
+    for entry in &mut kanji_entries.entries {
+        if let Some(radicals) = krad_map.get(&entry.literal) {
+            entry.make_up_radicals = radicals.clone();
+        }
+    }
+}
+
 #[tokio::main]
 async fn main() {
     let dictionary_xml = fs::read_to_string("../JMdict_e.xml").unwrap();
@@ -576,11 +587,7 @@ async fn main() {
     let mut kanji_entries: KanjiDictEntries = quick_xml::de::from_str(&kanji_xml).unwrap();
 
     let krad_map = parse_kradfile("kradfile");
-    for entry in &mut kanji_entries.entries {
-        if let Some(radicals) = krad_map.get(&entry.literal) {
-            entry.make_up_radicals = radicals.clone();
-        }
-    }
+    populate_radicals(&krad_map, &mut kanji_entries);
 
     let kanji_svgs = parse_kanji_svgs();
 

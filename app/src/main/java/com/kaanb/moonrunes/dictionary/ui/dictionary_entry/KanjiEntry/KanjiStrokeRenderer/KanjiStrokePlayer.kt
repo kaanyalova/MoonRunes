@@ -1,4 +1,4 @@
-package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.kanjidic.KanjiStrokeRenderer
+package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.KanjiEntry.KanjiStrokeRenderer
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box

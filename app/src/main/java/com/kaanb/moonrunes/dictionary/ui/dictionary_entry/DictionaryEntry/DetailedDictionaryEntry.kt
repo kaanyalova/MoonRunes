@@ -1,12 +1,15 @@
 package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DictionaryEntry
 
 import android.util.Log
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,6 +30,7 @@ fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifie
     Surface(
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             val mainWord = entry.mainWordDisplay.word
@@ -56,7 +60,7 @@ fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifie
                 OtherForms(otherForms = entry.otherForms, modifier = Modifier.fillMaxWidth())
             }
 
-            if (entry.kanji.isNotEmpty()) {
+            if (entry.kanjiLiterals.isNotEmpty()) {
                 KanjiList(
                     entry = entry,
                     modifier = Modifier

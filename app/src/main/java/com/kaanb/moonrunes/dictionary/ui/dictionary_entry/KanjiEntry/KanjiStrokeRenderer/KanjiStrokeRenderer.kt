@@ -1,4 +1,4 @@
-package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.kanjidic.KanjiStrokeRenderer
+package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.KanjiEntry.KanjiStrokeRenderer
 
 import android.util.Log
 import androidx.compose.animation.core.Animatable
@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.StrokeCap

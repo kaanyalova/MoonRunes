@@ -1,11 +1,10 @@
-package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.kanjidic.KanjiStrokeRenderer
+package com.kaanb.moonrunes.dictionary.ui.dictionary_entry.KanjiEntry.KanjiStrokeRenderer
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -55,7 +53,19 @@ fun KanjiStrokeGrid(
 
 
     OutlinedCard(modifier) {
-        Text("Stroke Order", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp))
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp, top = 12.dp)
+        ) {
+            Text("Stroke Order", style = MaterialTheme.typography.titleMedium)
+            Text(
+                "${strokes.size} Strokes",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
 
         KanjiStrokePlayer(
             modifier = Modifier.padding(12.dp), strokes = strokes, scale = 2.5f

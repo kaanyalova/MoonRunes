@@ -2,6 +2,8 @@ package com.kaanb.moonrunes.dictionary.util
 
 import android.content.Context
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDatabaseEntry
+import com.kaanb.moonrunes.dictionary.dao.KanjiDicCharacter
+import com.kaanb.moonrunes.dictionary.dao.KanjiDicCharacterWithStrokes
 
 data class KanjiWithReadings(
     val readings: MutableList<ReadingWithPriorities>,
@@ -77,7 +79,8 @@ data class DictionaryEntry(
     // other forms, their priorities(
     val otherForms: List<WordDisplayWithInfo>,
     // split kanji for kanjidic entries
-    val kanji: List<String>
+    val kanjiLiterals: List<String>,
+    var kanjiDicEntries: List<KanjiDicCharacterWithStrokes> = listOf()
 )
 
 

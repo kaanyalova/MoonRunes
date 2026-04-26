@@ -38,8 +38,6 @@ class DictionarySearchViewModel @Inject constructor(
 
 
     init {
-
-
         viewModelScope.launch {
             snapshotFlow { textFieldState.text }
                 .collectLatest { text ->

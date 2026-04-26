@@ -9,9 +9,9 @@ import jakarta.inject.Inject
 class GetKanjiDicEntryUseCase @Inject constructor(
     private val dictionaryRepository: DictionaryRepository
 ) {
-    operator fun invoke(kanji: String) {
+    operator fun invoke(kanji: String): KanjiDicCharacterWithPaths {
         val entry = dictionaryRepository.getKanjiDicEntry(kanji)
-        KanjiDicCharacterWithPaths(
+        return KanjiDicCharacterWithPaths(
             entry.kanjiDicEntry,
             kanjiStrokesToComposePaths(entry.strokes)
         )

@@ -13,9 +13,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SingleKanjiWithReading(
-    kanji: String,
-    reading: String,
-    modifier: Modifier = Modifier
+    kanji: String, reading: String, modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         Column {
@@ -31,6 +29,8 @@ fun SingleKanjiWithReading(
     }
 
 }
+
+
 
 @Preview
 @Composable

@@ -1,5 +1,6 @@
 package com.kaanb.moonrunes.dictionary.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.kaanb.moonrunes.dictionary.usecase.GetDictionaryEntryByIdUseCase
 import com.kaanb.moonrunes.dictionary.util.DictionaryEntry
@@ -20,7 +21,7 @@ data class DictionaryEntryUiState(
 @HiltViewModel(assistedFactory = DictionaryEntryViewModel.Factory::class)
 class DictionaryEntryViewModel @AssistedInject constructor(
     getDictionaryEntryByIdUseCase: GetDictionaryEntryByIdUseCase,
-    @Assisted private val id: Long
+    @Assisted private val id: Long,
 ) : ViewModel() {
 
 
@@ -29,7 +30,6 @@ class DictionaryEntryViewModel @AssistedInject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-
 
         _uiState.update { state ->
             state.copy(

@@ -8,6 +8,10 @@ sealed interface Route : NavKey {
     @Serializable
     data class DictionaryEntry(val id: Long) : Route, NavKey
 
+
+    @Serializable
+    data class KanjiEntry(val literal: String): Route, NavKey
+
     @Serializable
     data object DictionarySearch: Route, NavKey
 

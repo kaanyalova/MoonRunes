@@ -7,36 +7,33 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DictionaryEntry.DetailedDictionaryEntry
-import com.kaanb.moonrunes.dictionary.util.DictionaryEntry
-import com.kaanb.moonrunes.dictionary.viewmodel.DictionaryEntryViewModel
-
+import com.kaanb.moonrunes.dictionary.dao.KanjiDicCharacterWithPaths
+import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.KanjiEntry.KanjiEntry
+import com.kaanb.moonrunes.dictionary.viewmodel.KanjiEntryViewModel
 
 @Composable
-fun DictionaryEntryScreen(
-    innerPadding: PaddingValues,
-    entry: DictionaryEntry?
+fun KanjiDictionaryEntryScreen(innerPadding: PaddingValues, entry: KanjiDicCharacterWithPaths?) {
 
-) {
     if (entry != null) {
-        DetailedDictionaryEntry(
+        KanjiEntry(
             modifier = Modifier.padding(innerPadding),
-            entry = entry
+            kanjiDicCharacter = entry.kanjiDicEntry,
+            strokes = entry.paths
         )
     }
+
 }
 
 @Composable
-fun DictionaryEntryScreen(
+fun KanjiDictionaryEntryScreen(
     innerPadding: PaddingValues,
-    viewModel: DictionaryEntryViewModel = viewModel()
+    viewModel: KanjiEntryViewModel = viewModel()
 ) {
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    DictionaryEntryScreen(
+    KanjiDictionaryEntryScreen(
         innerPadding = innerPadding,
         entry = uiState.entry
     )
-
 }
+
