@@ -15,13 +15,14 @@ import com.kaanb.moonrunes.dictionary.viewmodel.DictionaryEntryViewModel
 @Composable
 fun DictionaryEntryScreen(
     innerPadding: PaddingValues,
-    entry: DictionaryEntry?
-
+    entry: DictionaryEntry?,
+    navigateToKanji: (String) -> Unit
 ) {
     if (entry != null) {
         DetailedDictionaryEntry(
             modifier = Modifier.padding(innerPadding),
-            entry = entry
+            entry = entry,
+            navigateToKanji = navigateToKanji
         )
     }
 }
@@ -29,14 +30,16 @@ fun DictionaryEntryScreen(
 @Composable
 fun DictionaryEntryScreen(
     innerPadding: PaddingValues,
-    viewModel: DictionaryEntryViewModel = viewModel()
+    viewModel: DictionaryEntryViewModel = viewModel(),
+    navigateToKanji: (String) ->Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     DictionaryEntryScreen(
         innerPadding = innerPadding,
-        entry = uiState.entry
+        entry = uiState.entry,
+        navigateToKanji
     )
 
 }

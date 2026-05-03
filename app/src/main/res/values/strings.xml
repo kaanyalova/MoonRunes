@@ -97,4 +97,9 @@
     <string name="dictionary_other_forms">Other Forms</string>
     <string name="dictionary_search_bar_placeholder">Search a Word</string>
     <string name="dictionary_kanji_list_header">Kanji Information</string>
+    <string name="sidebar_name_dictionary">Dictionary</string>
+    <string name="sidebar_name_favorites">Favorite Entries</string>
+    <string name="sidebar_name_flash_cards">Flash Cards</string>
+    <string name="sidebar_name_about">About</string>
+    <string name="sidebar_name_settings">Settings</string>
 </resources>

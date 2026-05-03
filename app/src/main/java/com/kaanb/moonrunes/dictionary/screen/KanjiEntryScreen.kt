@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kaanb.moonrunes.dictionary.dao.KanjiDicCharacterWithPaths
@@ -32,8 +33,9 @@ fun KanjiDictionaryEntryScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     KanjiDictionaryEntryScreen(
-        innerPadding = innerPadding,
-        entry = uiState.entry
+        //innerPadding = innerPadding,
+        innerPadding = PaddingValues(0.dp), // TODO: wtf? where is the padding coming from
+        entry = uiState.entry                   // why is the outlined boxes offset to bottom
     )
 }
 

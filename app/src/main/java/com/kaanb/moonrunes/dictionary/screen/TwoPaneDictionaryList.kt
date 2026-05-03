@@ -2,6 +2,7 @@ package com.kaanb.moonrunes.dictionary.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBars
@@ -12,12 +13,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.Button
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -26,28 +35,33 @@ import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kaanb.moonrunes.R
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDatabaseEntry
+import com.kaanb.moonrunes.dictionary.ui.DrawerSheet
 import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DictionaryEntry.BriefDictionaryEntry
 import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DictionaryEntry.DetailedDictionaryEntry
 import com.kaanb.moonrunes.dictionary.util.DictionaryEntry
 import com.kaanb.moonrunes.dictionary.util.formatDictionaryEntry
 import com.kaanb.moonrunes.dictionary.viewmodel.DictionarySearchViewModel
+import com.kaanb.moonrunes.navigation.Route
 import com.kaanb.moonrunes.ui.theme.MoonRunesTheme
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -61,71 +75,93 @@ fun DictionarySearchScreen(
     results: List<DictionaryEntry>,
     getEntryById: (Long) -> DictionaryEntry,
     textFieldState: TextFieldState,
-    search: (String) -> Unit
+    search: (String) -> Unit,
+    navigateToKanji: (String) -> Unit,
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Long>()
     val scope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val searchBarState = rememberSearchBarState()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
 
     NavigableListDetailPaneScaffold(
         navigator = navigator,
         listPane = {
             AnimatedPane() {
-                Scaffold(
-                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize(),
-                    topBar = {
-                        val focus = LocalFocusManager.current
-                        LaunchedEffect(Unit) { focus.clearFocus() }
-                        TopAppBar(
-                            windowInsets = WindowInsets(0, 0, 0, 0),
-                            title = {
-                                SearchBar(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-
-                                        .windowInsetsPadding(WindowInsets.statusBars)
-                                        .padding(end = 12.dp, bottom = 8.dp, top = 8.dp),
-                                    state = searchBarState,
-                                    inputField = {
-                                        SearchBarDefaults.InputField(
-                                            textFieldState = textFieldState,
-                                            searchBarState = searchBarState,
-                                            placeholder = { Text(stringResource(R.string.dictionary_search_bar_placeholder)) },
-                                            onSearch = search,
-                                            prefix = {
-                                                Icon(
-                                                    painterResource(R.drawable.search_24px),
-                                                    contentDescription = null
-                                                )
-                                            },
+                ModalNavigationDrawer(
+                    drawerState = drawerState, drawerContent = {
+                        DrawerSheet(selectedItem = Route.DictionarySearch, onItemClicked = {})
+                    }) {
+                    Scaffold(
+                        modifier = Modifier
+                            .nestedScroll(scrollBehavior.nestedScrollConnection)
+                            .fillMaxSize(),
+                        topBar = {
+                            val focus = LocalFocusManager.current
+                            LaunchedEffect(Unit) { focus.clearFocus() }
+                            TopAppBar(
+                                windowInsets = WindowInsets(0, 0, 0, 0),
+                                navigationIcon = {
+                                    IconButton(
+                                        modifier = Modifier.windowInsetsPadding(
+                                            WindowInsets.statusBars
+                                        ), onClick = {
+                                            scope.launch { drawerState.apply { if (isClosed) open() else close() } }
+                                        }) {
+                                        Icon(
+                                            painterResource(R.drawable.menu_24px),
+                                            contentDescription = null
                                         )
+                                    }
+                                },
+                                title = {
+                                    Row(
+                                        modifier = modifier.windowInsetsPadding(WindowInsets.statusBars),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        SearchBar(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(end = 12.dp, bottom = 8.dp, top = 8.dp),
+                                            state = searchBarState,
+                                            inputField = {
+                                                SearchBarDefaults.InputField(
+                                                    textFieldState = textFieldState,
+                                                    searchBarState = searchBarState,
+                                                    placeholder = { Text(stringResource(R.string.dictionary_search_bar_placeholder)) },
+                                                    onSearch = search,
+                                                    prefix = {
+                                                        Icon(
+                                                            painterResource(R.drawable.search_24px),
+                                                            contentDescription = null
+                                                        )
+                                                    },
+                                                )
 
-                                    },
+                                            },
 
-                                )
-                            },
-                            scrollBehavior = scrollBehavior
-                        )
-                    },
-                    content = { innerPadding ->
-                        ListPane(
-                            innerPadding = innerPadding,
-                            items = results,
-                            onItemClick = { id ->
-                                scope.launch {
-                                    navigator.navigateTo(
-                                        pane = ListDetailPaneScaffoldRole.Detail,
-                                        contentKey = id
-                                    )
-                                }
-                            },
-                            selectedItem = navigator.currentDestination?.contentKey
-                        )
-                    })
+                                            )
+                                    }
+                                },
+                                scrollBehavior = scrollBehavior
+                            )
+                        },
+                        content = { innerPadding ->
+                            ListPane(
+                                innerPadding = innerPadding, items = results, onItemClick = { id ->
+                                    scope.launch {
+                                        navigator.navigateTo(
+                                            pane = ListDetailPaneScaffoldRole.Detail,
+                                            contentKey = id
+                                        )
+                                    }
+                                }, selectedItem = navigator.currentDestination?.contentKey
+                            )
+                        },
+                    )
+                }
             }
-
-
         },
 
         detailPane = {
@@ -138,7 +174,8 @@ fun DictionarySearchScreen(
 
                     DetailedDictionaryEntry(
                         modifier = Modifier.padding(top = 8.dp),
-                        entry = entry
+                        entry = entry,
+                        navigateToKanji = navigateToKanji
                     )
                 }
             }
@@ -192,7 +229,8 @@ fun ListPane(
 fun DictionarySearchScreen(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
-    viewModel: DictionarySearchViewModel = hiltViewModel()
+    viewModel: DictionarySearchViewModel = hiltViewModel(),
+    navigateToKanji: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -202,7 +240,8 @@ fun DictionarySearchScreen(
         results = uiState.entries,
         getEntryById = viewModel::getEntryById,
         textFieldState = viewModel.textFieldState,
-        search = viewModel::search
+        search = viewModel::search,
+        navigateToKanji = navigateToKanji
     )
 
 }

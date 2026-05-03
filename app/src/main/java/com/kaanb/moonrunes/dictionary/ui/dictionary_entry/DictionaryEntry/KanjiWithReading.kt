@@ -23,7 +23,7 @@ fun SingleKanjiWithReading(
                 modifier = Modifier.offset(y = 10.dp, x = 1.dp)
             )
             Text(
-                kanji, style = MaterialTheme.typography.displayMedium
+                modifier = modifier, text = kanji, style = MaterialTheme.typography.displayMedium
             )
         }
     }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,8 +26,7 @@ import com.kaanb.moonrunes.ui.theme.MoonRunesTheme
 import kotlinx.serialization.json.Json
 
 @Composable
-fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifier) {
-
+fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifier, navigateToKanji: (String) -> Unit) {
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -35,7 +35,11 @@ fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifie
         Column(modifier = Modifier.padding(20.dp)) {
             val mainWord = entry.mainWordDisplay.word
 
-            MainWordDisplay(word = mainWord)
+            Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                MainWordDisplay(word = mainWord, modifier = Modifier.alignByBaseline())
+                // somewhat baseline aligned by the text
+                FavoriteButton(modifier = Modifier.align(Alignment.Bottom).padding(bottom = 12.dp), isFavorited = false, onClick = {} )
+            }
 
             val mainPriorities = entry.mainWordDisplay.priorities
 
@@ -65,7 +69,8 @@ fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifie
                     entry = entry,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                        .padding(vertical = 8.dp),
+                    navigateToKanji = navigateToKanji
                 )
             }
 
@@ -201,7 +206,7 @@ private fun DetailedDictionaryEntryPreview() {
 
         Log.d("fish", fishForDisplay.toString())
 
-        DetailedDictionaryEntry(fishForDisplay)
+        DetailedDictionaryEntry(fishForDisplay, navigateToKanji = {})
     }
 
 }

@@ -381,6 +381,7 @@ pub extern "system" fn review_card(
         .unwrap();
 }
 
+#[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
 pub extern "system" fn get_review_info_for_card<'caller>(
     mut unowned_env: EnvUnowned<'caller>,
     _class: JClass<'_>,
@@ -399,6 +400,7 @@ pub extern "system" fn get_review_info_for_card<'caller>(
     outcome.resolve::<ThrowRuntimeExAndDefault>()
 }
 
+#[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
 pub extern "system" fn dump_state<'caller>(
     mut unowned_env: EnvUnowned<'caller>,
     _class: JClass<'_>,
@@ -415,6 +417,7 @@ pub extern "system" fn dump_state<'caller>(
     outcome.resolve::<ThrowRuntimeExAndDefault>()
 }
 
+#[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
 pub extern "system" fn new_from_state<'caller>(
     mut unowned_env: EnvUnowned<'caller>,
     _class: JClass<'_>,

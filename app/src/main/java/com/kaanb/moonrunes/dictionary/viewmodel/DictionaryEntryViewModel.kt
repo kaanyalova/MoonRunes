@@ -25,7 +25,6 @@ class DictionaryEntryViewModel @AssistedInject constructor(
 ) : ViewModel() {
 
 
-
     private val _uiState = MutableStateFlow(DictionaryEntryUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -38,6 +37,10 @@ class DictionaryEntryViewModel @AssistedInject constructor(
         }
     }
 
+
+    fun favorite() {
+
+    }
 
     // https://github.com/android/nav3-recipes/blob/main/app/src/main/java/com/example/nav3recipes/passingarguments/viewmodels/hilt
     // how does google manage to make such disgusting apis wtf?

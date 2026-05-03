@@ -503,7 +503,7 @@ fn filename_to_kanji(filename: &str) -> Option<char> {
 }
 
 fn parse_kanji_svgs() -> Vec<(String, String)> {
-    let kanji_svgs = fs::read_dir("kanji").unwrap();
+    let kanji_svgs = fs::read_dir("./data/kanjivg").unwrap();
 
     kanji_svgs
         .filter_map(|svg| {

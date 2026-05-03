@@ -10,9 +10,9 @@ import com.kaanb.moonrunes.dictionary.util.WordDisplayData
 fun MainWordDisplay(modifier: Modifier = Modifier, word: WordDisplayData) {
     when (word) {
         is WordDisplayData.KanjiWordDisplay -> {
-            SingleKanjiWithReading(word.value.kanji, word.value.reading)
+            SingleKanjiWithReading(modifier = modifier , kanji = word.value.kanji, reading =  word.value.reading)
         }
 
-        is WordDisplayData.NormalWordDisplay -> Text(word.value, style = MaterialTheme.typography.displayMedium)
+        is WordDisplayData.NormalWordDisplay -> Text(modifier = modifier, text =  word.value, style = MaterialTheme.typography.displayMedium)
     }
 }

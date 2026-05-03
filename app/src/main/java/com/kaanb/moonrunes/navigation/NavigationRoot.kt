@@ -25,8 +25,9 @@ fun NavigationRoot(innerPadding: PaddingValues) {
             entry<Route.DictionarySearch> {
                 DictionarySearchScreen(
                     innerPadding = innerPadding,
+                    navigateToKanji = { kanji -> backStack.add(Route.KanjiEntry(kanji)) },
                     // todo: should i put these here, or in the viewmodel?
-                   )
+                )
             }
 
             entry<Route.DictionaryEntry> { key ->
@@ -36,12 +37,14 @@ fun NavigationRoot(innerPadding: PaddingValues) {
                             factory.create(key.id)
                         })
 
-                DictionaryEntryScreen(innerPadding = innerPadding, viewModel = viewModel)
+                DictionaryEntryScreen(
+                    innerPadding = innerPadding,
+                    viewModel = viewModel,
+                    navigateToKanji = { kanji -> backStack.add(Route.KanjiEntry(kanji)) })
 
             }
 
-            entry<Route.KanjiEntry> {
-                key ->
+            entry<Route.KanjiEntry> { key ->
                 val viewModel =
                     hiltViewModel<KanjiEntryViewModel, KanjiEntryViewModel.Factory>(
                         creationCallback = { factory ->

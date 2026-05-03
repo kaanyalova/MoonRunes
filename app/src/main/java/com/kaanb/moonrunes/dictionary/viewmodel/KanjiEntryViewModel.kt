@@ -15,7 +15,7 @@ data class KanjiDictionaryEntryUiState(
     val entry: KanjiDicCharacterWithPaths? = null,
 )
 
-@HiltViewModel(assistedFactory = DictionaryEntryViewModel.Factory::class)
+@HiltViewModel(assistedFactory = KanjiEntryViewModel.Factory::class)
 class KanjiEntryViewModel @AssistedInject constructor(
     getKanjiDicEntryUseCase: GetKanjiDicEntryUseCase,
     @Assisted private val literal: String,

@@ -22,9 +22,16 @@ import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.NumberCircle
 import com.kaanb.moonrunes.dictionary.util.DictionaryEntry
 
 @Composable
-fun KanjiList(modifier: Modifier = Modifier, entry: DictionaryEntry) {
+fun KanjiList(
+    modifier: Modifier = Modifier,
+    entry: DictionaryEntry,
+    navigateToKanji: (String) -> Unit
+) {
     OutlinedCard(modifier = modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Text(
                 text = stringResource(R.string.dictionary_kanji_list_header),
                 style = MaterialTheme.typography.titleMedium
@@ -32,11 +39,9 @@ fun KanjiList(modifier: Modifier = Modifier, entry: DictionaryEntry) {
 
 
             entry.kanjiDicEntries.forEachIndexed { i, kanji ->
-
-
-                BriefKanjiEntry(entry = kanji.kanjiDicEntry)
-
-
+                BriefKanjiEntry(
+                    entry = kanji.kanjiDicEntry,
+                    onClick = { navigateToKanji(kanji.kanjiDicEntry.literal) })
             }
         }
 
