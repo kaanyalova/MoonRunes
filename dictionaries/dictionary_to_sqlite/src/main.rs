@@ -503,7 +503,7 @@ fn filename_to_kanji(filename: &str) -> Option<char> {
 }
 
 fn parse_kanji_svgs() -> Vec<(String, String)> {
-    let kanji_svgs = fs::read_dir("./data/kanjivg").unwrap();
+    let kanji_svgs = fs::read_dir("./data/kanjivg/kanji").unwrap();
 
     kanji_svgs
         .filter_map(|svg| {
@@ -570,7 +570,7 @@ fn populate_radicals(
 
 #[tokio::main]
 async fn main() {
-    let dictionary_xml = fs::read_to_string("../JMdict_e.xml").unwrap();
+    let dictionary_xml = fs::read_to_string("./data/JMdict_e.xml").unwrap();
     let dictionary_xml = dictionary_xml.replace("&", "&amp;");
     let entries: JmDictEntries = quick_xml::de::from_str(&dictionary_xml).unwrap();
 
@@ -583,7 +583,7 @@ async fn main() {
         .await
         .unwrap();
 
-    let kanji_xml = fs::read_to_string("../kanjidic2.xml").unwrap();
+    let kanji_xml = fs::read_to_string("./data/kanjidic2.xml").unwrap();
     let mut kanji_entries: KanjiDictEntries = quick_xml::de::from_str(&kanji_xml).unwrap();
 
     let krad_map = parse_kradfile("kradfile");

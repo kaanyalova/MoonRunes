@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS Entry (
-    id INTEGER PRIMARY KEY NOT NULL
+    id INTEGER PRIMARY KEY NOT NULL,
+    is_favorited INTEGER 
     --relevancy_score INTEGER NOT NULL
 );
 

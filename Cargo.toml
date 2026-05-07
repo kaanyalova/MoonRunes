@@ -5,7 +5,7 @@ members = [
     "dictionaries/dictionary_to_sqlite/",
     "fsrs_jni_rs/",
     "fsrs_jni_rs/vendor/systemstat", 
-    "wotd_server",
+    "server",
 ]
 
 

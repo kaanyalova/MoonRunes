@@ -26,7 +26,7 @@ import com.kaanb.moonrunes.ui.theme.MoonRunesTheme
 import kotlinx.serialization.json.Json
 
 @Composable
-fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifier, navigateToKanji: (String) -> Unit) {
+fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifier, navigateToKanji: (String) -> Unit, onFavoriteButtonPressed: () -> Unit) {
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -38,7 +38,7 @@ fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifie
             Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 MainWordDisplay(word = mainWord, modifier = Modifier.alignByBaseline())
                 // somewhat baseline aligned by the text
-                FavoriteButton(modifier = Modifier.align(Alignment.Bottom).padding(bottom = 12.dp), isFavorited = false, onClick = {} )
+                FavoriteButton(modifier = Modifier.align(Alignment.Bottom).padding(bottom = 12.dp), isFavorited = entry.isFavorited, onClick = onFavoriteButtonPressed )
             }
 
             val mainPriorities = entry.mainWordDisplay.priorities
@@ -206,7 +206,7 @@ private fun DetailedDictionaryEntryPreview() {
 
         Log.d("fish", fishForDisplay.toString())
 
-        DetailedDictionaryEntry(fishForDisplay, navigateToKanji = {})
+        DetailedDictionaryEntry(fishForDisplay, navigateToKanji = {}, onFavoriteButtonPressed = {})
     }
 
 }

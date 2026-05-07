@@ -23,6 +23,7 @@ import java.io.File
 @Serializable
 data class Entry(
     @PrimaryKey val id: Long,
+    @ColumnInfo(name = "is_favorited") val isFavorited: Boolean?
 )
 
 @Entity(
@@ -143,6 +144,7 @@ data class Definition(
 data class DictionaryDatabaseEntry(
     @Embedded val entry: Entry,
 
+
     @Relation(
         parentColumn = "id", entityColumn = "entry_fk", entity = KanjiElement::class
     ) val kanjiElements: List<KanjiElementWithPrioritiesAndInformation>,
@@ -221,6 +223,9 @@ interface DictionaryDao {
 
     @Query("SELECT * FROM KanjiDicEntry WHERE body = :body")
     fun getKanjiDicEntry(body: String): KanjiDicEntry
+
+    @Query("UPDATE Entry SET is_favorited = :state WHERE id = :id")
+    fun setEntryFavoriteState(id: Long, state: Boolean)
 }
 
 

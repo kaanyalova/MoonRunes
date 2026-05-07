@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kaanb.moonrunes.dictionary.usecase.FavoriteDictionaryEntryUseCase
 import com.kaanb.moonrunes.dictionary.usecase.GetDictionaryEntryByIdUseCase
 import com.kaanb.moonrunes.dictionary.usecase.SearchAndFormatDictionaryEntriesUseCase
 import com.kaanb.moonrunes.dictionary.util.DictionaryEntry
@@ -22,14 +23,16 @@ import javax.inject.Inject
 const val TAG = "DictionarySearchViewModel"
 
 data class DictionarySearchUiState(
-    val entries: List<DictionaryEntry> = listOf()
+    val entries: List<DictionaryEntry> = listOf(),
+    val selectedEntry: DictionaryEntry? = null
 )
 
 @HiltViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 class DictionarySearchViewModel @Inject constructor(
     private val searchAndFormatDictionaryEntriesUseCase: SearchAndFormatDictionaryEntriesUseCase,
-    private val getDictionaryEntryByIdUseCase: GetDictionaryEntryByIdUseCase
+    private val getDictionaryEntryByIdUseCase: GetDictionaryEntryByIdUseCase,
+    private val favoriteDictionaryEntryUseCase: FavoriteDictionaryEntryUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DictionarySearchUiState())
     val uiState = _uiState.asStateFlow()
@@ -55,6 +58,34 @@ class DictionarySearchViewModel @Inject constructor(
 
     fun getEntryById(id: Long): DictionaryEntry {
         return getDictionaryEntryByIdUseCase(id)
+    }
+
+
+    fun selectEntry(id: Long) {
+        _uiState.update { state ->
+            state.copy(
+                selectedEntry = getEntryById(id)
+            )
+        }
+    }
+
+    fun onFavoriteButtonPressed() {
+        val favoriteState = _uiState.value.selectedEntry?.isFavorited ?: false
+        val id = _uiState.value.selectedEntry?.entryId
+
+        if (id == null) {
+            Log.e(TAG, "selected entry is null when pressing the favorite button")
+            return
+        }
+
+        favoriteDictionaryEntryUseCase(_uiState.value.selectedEntry!!.entryId, !favoriteState)
+
+        _uiState.update { state ->
+            state.copy(
+                selectedEntry = _uiState.value.selectedEntry?.copy(isFavorited = !favoriteState)
+            )
+        }
+
     }
 
     fun search(searchInput: String) {

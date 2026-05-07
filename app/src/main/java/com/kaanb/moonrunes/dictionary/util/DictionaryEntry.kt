@@ -80,7 +80,8 @@ data class DictionaryEntry(
     val otherForms: List<WordDisplayWithInfo>,
     // split kanji for kanjidic entries
     val kanjiLiterals: List<String>,
-    var kanjiDicEntries: List<KanjiDicCharacterWithStrokes> = listOf()
+    var kanjiDicEntries: List<KanjiDicCharacterWithStrokes> = listOf(),
+    var isFavorited: Boolean = false
 )
 
 
@@ -306,7 +307,8 @@ fun formatDictionaryEntry(entry: DictionaryDatabaseEntry, context: Context): Dic
         mainWordDisplay,
         meanings,
         otherForms,
-        kanjiInMainWord
+        kanjiInMainWord,
+        isFavorited = entry.entry.isFavorited ?: false
     )
 }
 
