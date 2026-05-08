@@ -8,10 +8,8 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.kaanb.moonrunes.dictionary.screen.DictionaryEntryScreen
 import com.kaanb.moonrunes.dictionary.screen.DictionarySearchScreen
 import com.kaanb.moonrunes.dictionary.screen.KanjiDictionaryEntryScreen
-import com.kaanb.moonrunes.dictionary.viewmodel.DictionaryEntryViewModel
 import com.kaanb.moonrunes.dictionary.viewmodel.KanjiEntryViewModel
 
 @Composable
@@ -30,19 +28,6 @@ fun NavigationRoot(innerPadding: PaddingValues) {
                 )
             }
 
-            entry<Route.DictionaryEntry> { key ->
-                val viewModel =
-                    hiltViewModel<DictionaryEntryViewModel, DictionaryEntryViewModel.Factory>(
-                        creationCallback = { factory ->
-                            factory.create(key.id)
-                        })
-
-                DictionaryEntryScreen(
-                    innerPadding = innerPadding,
-                    viewModel = viewModel,
-                    navigateToKanji = { kanji -> backStack.add(Route.KanjiEntry(kanji)) })
-
-            }
 
             entry<Route.KanjiEntry> { key ->
                 val viewModel =

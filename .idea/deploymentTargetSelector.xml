@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-04-20T18:43:03.846812247Z">
+        <DropdownSelection timestamp="2026-05-06T11:36:13.648398256Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/home/kaan/.android/avd/Medium_Phone.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/kaan/.android/avd/Pixel_Tablet.avd" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -16,6 +16,7 @@
       <SelectionState runConfigName="KanjiEntryPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+<<<<<<< HEAD
       <SelectionState runConfigName="FavoriteButtonPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -25,6 +26,8 @@
       <SelectionState runConfigName="Furigana">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+=======
+>>>>>>> fda2f9f9aba410f9ad4438e1f301b29172eb13d5
     </selectionStates>
   </component>
 </project>

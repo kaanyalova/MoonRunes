@@ -13,24 +13,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
@@ -48,11 +44,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.window.core.layout.WindowSizeClass
 import com.kaanb.moonrunes.R
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDatabaseEntry
 import com.kaanb.moonrunes.dictionary.ui.DrawerSheet
@@ -71,19 +67,21 @@ import kotlinx.serialization.json.Json
 @Composable
 fun DictionarySearchScreen(
     modifier: Modifier = Modifier,
-    innerPadding: PaddingValues,
+    innerPadding: PaddingValues, // ??
     results: List<DictionaryEntry>,
-    getEntryById: (Long) -> DictionaryEntry,
     textFieldState: TextFieldState,
     search: (String) -> Unit,
     navigateToKanji: (String) -> Unit,
+    selectEntry: (Long) -> Unit,
+    selectedEntry: DictionaryEntry?,
+    onFavoriteButtonPressed: () -> Unit
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Long>()
     val scope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val searchBarState = rememberSearchBarState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
     NavigableListDetailPaneScaffold(
         navigator = navigator,
@@ -148,16 +146,21 @@ fun DictionarySearchScreen(
                             )
                         },
                         content = { innerPadding ->
+                            val isExpanded = windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND);
                             ListPane(
                                 innerPadding = innerPadding, items = results, onItemClick = { id ->
                                     scope.launch {
+                                        selectEntry(id)
                                         navigator.navigateTo(
                                             pane = ListDetailPaneScaffoldRole.Detail,
                                             contentKey = id
                                         )
                                     }
-                                }, selectedItem = navigator.currentDestination?.contentKey
+                                },
+                                selectedItem = selectedEntry?.entryId,
+                                isExpanded = isExpanded
                             )
+
                         },
                     )
                 }
@@ -165,17 +168,14 @@ fun DictionarySearchScreen(
         },
 
         detailPane = {
-            val id = navigator.currentDestination?.contentKey
             AnimatedPane() {
 
-                if (id != null) {
-                    val entry = getEntryById(id ?: 0)
-
-
+                if (selectedEntry != null) {
                     DetailedDictionaryEntry(
                         modifier = Modifier.padding(top = 8.dp),
-                        entry = entry,
-                        navigateToKanji = navigateToKanji
+                        entry = selectedEntry,
+                        navigateToKanji = navigateToKanji,
+                        onFavoriteButtonPressed = onFavoriteButtonPressed
                     )
                 }
             }
@@ -200,6 +200,7 @@ fun ListPane(
     items: List<DictionaryEntry>,
     onItemClick: (id: Long) -> Unit,
     selectedItem: Long?,
+    isExpanded : Boolean,
 ) {
     AnimatedVisibility(
         visible = false
@@ -207,6 +208,7 @@ fun ListPane(
         TextField(rememberTextFieldState(), modifier = Modifier.fillMaxWidth())
 
     }
+
 
     LazyColumn(
         contentPadding = innerPadding
@@ -218,7 +220,8 @@ fun ListPane(
                     .padding(8.dp),
                 entry = entry,
                 onClick = onItemClick,
-                isSelected = entry.entryId == selectedItem
+                // only highlight when on a wider screen
+                isSelected = if (isExpanded) entry.entryId == selectedItem else false //
             )
         }
     }
@@ -238,10 +241,12 @@ fun DictionarySearchScreen(
         modifier = modifier,
         innerPadding = innerPadding,
         results = uiState.entries,
-        getEntryById = viewModel::getEntryById,
         textFieldState = viewModel.textFieldState,
         search = viewModel::search,
-        navigateToKanji = navigateToKanji
+        navigateToKanji = navigateToKanji,
+        selectEntry = viewModel::selectEntry,
+        selectedEntry = uiState.selectedEntry,
+        onFavoriteButtonPressed = viewModel::onFavoriteButtonPressed,
     )
 
 }

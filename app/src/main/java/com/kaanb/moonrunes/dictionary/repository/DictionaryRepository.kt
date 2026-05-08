@@ -109,4 +109,8 @@ class DictionaryRepository @Inject constructor(private val dictionaryDao: Dictio
         )
     }
 
+    fun setFavoriteState(id: Long, state: Boolean) {
+        dictionaryDao.setEntryFavoriteState(id, state)
+    }
+
 }
