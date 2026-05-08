@@ -1,7 +1,47 @@
 package com.kaanb.moonrunes.dictionary.usecase
 
-class FavoriteDictionaryEntryUseCase {
-    // - set favorite in the dictionary db
-    // - create the flash card
-    //
+import com.kaanb.moonrunes.dictionary.repository.DictionaryRepository
+import com.kaanb.moonrunes.dictionary.util.WordDisplayData
+import com.kaanb.moonrunes.flash_cards.dao.FlashCard
+import com.kaanb.moonrunes.flash_cards.dao.FlashCardDao
+import com.kaanb.moonrunes.flash_cards.repository.FlashCardRepository
+import javax.inject.Inject
+
+class FavoriteDictionaryEntryUseCase @Inject constructor(
+    private val dictionaryRepository: DictionaryRepository,
+    private val flashCardDao: FlashCardDao,
+    private val getDictionaryEntryByIdUseCase: GetDictionaryEntryByIdUseCase,
+    private val flashCardRepository: FlashCardRepository
+) {
+    suspend operator fun invoke(dictionaryId: Long) {
+        val entry = getDictionaryEntryByIdUseCase(dictionaryId)
+        val word = entry.mainWordDisplay.word
+
+        val hasKanji = word is WordDisplayData.KanjiWordDisplay
+        val innerWord = when (word) {
+            is WordDisplayData.KanjiWordDisplay -> word.value.kanji
+            is WordDisplayData.NormalWordDisplay -> word.value
+        }
+
+
+        // TODO
+        // - fetch audio
+        // - fetch sentences
+        val flashCard = FlashCard(
+            word = innerWord,
+            wordReading = if (hasKanji) {
+                word.value.kanji
+            } else {
+                null
+            },
+            containsKanji = hasKanji,
+            exampleSentence = null,
+            exampleSentenceFuriganaListJson = listOf(),
+            exampleSentenceMeaning = null,
+            audio = byteArrayOf()
+        )
+
+        flashCardRepository.addCard(flashCard)
+    }
+
 }

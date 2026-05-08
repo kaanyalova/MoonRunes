@@ -32,9 +32,5 @@ object DictionaryModule {
         return db.dictionaryDao()
     }
 
-    @Singleton
-    @Provides
-    fun provideJniFsrs(): FsrsJni {
-        return FsrsJni()
-    }
+
 }

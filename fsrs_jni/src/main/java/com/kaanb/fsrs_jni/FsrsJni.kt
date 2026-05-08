@@ -84,6 +84,8 @@ class FsrsJni {
     private external fun review_card(ctx_ptr: Long, card_id: Long, review_type: Int)
     private external fun get_review_info_for_card(ctx_ptr: Long, card_id: Long): String
 
+    private external fun does_card_with_id_exist(ctx_ptr: Long, card_id: Long): Boolean
+
     constructor(state: ByteArray? = null) {
         System.loadLibrary("fsrs_jni")
         if (state == null) {
@@ -138,9 +140,15 @@ class FsrsJni {
         return Json.decodeFromString<CardReviewIntervals>(reviewInfoJson)
     }
 
+    public fun doesCardWithIdExist(cardId: Long):Boolean {
+        return does_card_with_id_exist(fsrsContextPointer, cardId)
+    }
+
+
     public fun recreateFromState(state: ByteArray) {
         free()
         fsrsContextPointer = new_fsrs_from_state(state)
     }
+
 
 }

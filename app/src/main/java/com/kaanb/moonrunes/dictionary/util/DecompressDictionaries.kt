@@ -8,7 +8,7 @@ import java.io.File
 
 const val TAG = "DictionaryDecompressor"
 
-fun decompressDictionaries(context: Context) {
+suspend fun decompressDictionaries(context: Context) {
     val uncompressedFile = File(context.filesDir, "dict.db")
     val start= System.currentTimeMillis()
 

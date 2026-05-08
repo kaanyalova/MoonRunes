@@ -2,6 +2,7 @@ use core::panic;
 use std::collections::HashMap;
 use std::iter;
 use std::mem::transmute;
+use std::sync::Mutex;
 
 use anyhow::Result;
 use anyhow::anyhow;
@@ -318,14 +319,14 @@ impl FSRSContext {
 /// returns a "pointer" to the context
 pub extern "system" fn new_fsrs() -> i64 {
     let fsrs = FSRSContext::new(0.9).unwrap();
-    let boxed = Box::new(fsrs);
+    let boxed = Box::new(Mutex::new(fsrs));
     let raw = Box::into_raw(boxed);
     raw as i64
 }
 
 #[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
 pub extern "system" fn free_fsrs(ctx_ptr: i64) {
-    let ctx_ptr = ctx_ptr as *mut FSRSContext;
+    let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
 
     let _ = unsafe {
         // just in case
@@ -340,8 +341,9 @@ pub extern "system" fn free_fsrs(ctx_ptr: i64) {
 
 #[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
 pub extern "system" fn push_card(ctx_ptr: i64) -> i64 {
-    let ctx_ptr = ctx_ptr as *mut FSRSContext;
-    let ctx = unsafe { &mut *ctx_ptr };
+    let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
+    let mutex = unsafe { &*ctx_ptr };
+    let mut ctx = mutex.lock().unwrap();
     ctx.push_card()
 }
 
@@ -352,8 +354,9 @@ pub extern "system" fn get_due_cards_as_json<'caller>(
     ctx_ptr: i64,
 ) -> JString<'caller> {
     let outcome = unowned_env.with_env(|env| -> Result<_, Error> {
-        let ctx_ptr = ctx_ptr as *mut FSRSContext;
-        let ctx = unsafe { &mut *ctx_ptr };
+        let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
+        let mutex = unsafe { &*ctx_ptr };
+        let ctx = mutex.lock().unwrap();
         let cards = ctx.get_due_cards();
         let json = serde_json::to_string(&cards).unwrap();
         JString::from_str(env, json)
@@ -363,8 +366,9 @@ pub extern "system" fn get_due_cards_as_json<'caller>(
 
 #[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
 pub extern "system" fn optimize(ctx_ptr: i64) {
-    let ctx_ptr = ctx_ptr as *mut FSRSContext;
-    let ctx = unsafe { &mut *ctx_ptr };
+    let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
+    let mutex = unsafe { &*ctx_ptr };
+    let mut ctx = mutex.lock().unwrap();
     ctx.optimize().unwrap()
 }
 
@@ -374,8 +378,9 @@ pub extern "system" fn review_card(
     card_id: i32,
     review_type: i32, // maps to ReviewType
 ) {
-    let ctx_ptr = ctx_ptr as *mut FSRSContext;
-    let ctx = unsafe { &mut *ctx_ptr };
+    let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
+    let mutex = unsafe { &*ctx_ptr };
+    let mut ctx = mutex.lock().unwrap();
 
     ctx.review_card(card_id as i64, ReviewType::try_from(review_type).unwrap())
         .unwrap();
@@ -389,8 +394,9 @@ pub extern "system" fn get_review_info_for_card<'caller>(
     card_id: i32,
 ) -> JString<'caller> {
     let outcome = unowned_env.with_env(|env| -> Result<_, Error> {
-        let ctx_ptr = ctx_ptr as *mut FSRSContext;
-        let ctx = unsafe { &mut *ctx_ptr };
+        let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
+        let mutex = unsafe { &*ctx_ptr };
+        let ctx = mutex.lock().unwrap();
         let review_info = ctx.get_review_info_for_card(card_id as i64).unwrap();
         let json = serde_json::to_string(&review_info).unwrap();
         let review_info = env.new_string(json).unwrap();
@@ -407,8 +413,9 @@ pub extern "system" fn dump_state<'caller>(
     ctx_ptr: i64,
 ) -> JByteArray<'caller> {
     let outcome = unowned_env.with_env(|env| -> Result<_, Error> {
-        let ctx_ptr = ctx_ptr as *mut FSRSContext;
-        let ctx = unsafe { &mut *ctx_ptr };
+        let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
+        let mutex = unsafe { &*ctx_ptr };
+        let ctx = mutex.lock().unwrap();
         let state = ctx.dump_state();
         let state = env.byte_array_from_slice(&state).unwrap();
         Ok(state)
@@ -426,9 +433,17 @@ pub extern "system" fn new_from_state<'caller>(
     let outcome = unowned_env.with_env(|env| -> Result<_, Error> {
         let bytes = env.convert_byte_array(state).unwrap();
         let ctx = FSRSContext::from_state(bytes);
-        let boxed = Box::new(ctx);
+        let boxed = Box::new(Mutex::new(ctx));
         let raw = Box::into_raw(boxed);
         Ok(raw as i64)
     });
     outcome.resolve::<ThrowRuntimeExAndDefault>()
+}
+
+#[jni_mangle("com.kaanb.fsrs_jni.Fsrsjni")]
+pub extern "system" fn does_card_with_id_exist(ctx_ptr: i64, id: i64) -> bool {
+    let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
+    let mutex = unsafe { &*ctx_ptr };
+    let ctx = mutex.lock().unwrap();
+    ctx.cards.iter().any(|c| c.id == id)
 }

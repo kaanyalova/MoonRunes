@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
+import com.kaanb.fsrs_jni.FsrsJni
 import kotlinx.serialization.json.Json
 
 data class Furigana(
@@ -20,7 +21,7 @@ data class FlashCardDb(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val word: String,
-    val wordReading: String,
+    val wordReading: String?,
     val containsKanji: Boolean,
 
     // there are fetched form a server
@@ -30,7 +31,7 @@ data class FlashCardDb(
 
     val audio: ByteArray
 ) {
-    fun intoFlashCard(): FlashCard {
+    fun into(): FlashCard {
         val decodedFuriganaList = if (exampleSentenceFuriganaListJson != null) {
             val list = exampleSentenceFuriganaListJson;
             Json.decodeFromString<List<Furigana>>(list)
@@ -51,11 +52,18 @@ data class FlashCardDb(
 
         return flashCard
     }
+
+
 }
+
+data class FlashCardWithReviewInfo(
+    val card: FlashCard,
+    val reviewInfo: FsrsJni.CardReviewIntervals
+)
 
 data class FlashCard(
     val word: String,
-    val wordReading: String,
+    val wordReading: String?,
     val containsKanji: Boolean,
 
     // there are fetched form a server
@@ -67,7 +75,7 @@ data class FlashCard(
 
 
 ) {
-    public fun intoFlashCardDb(): FlashCardDb {
+    fun into(): FlashCardDb {
         val jsonFuriganaList = Json.encodeToString(exampleSentenceFuriganaListJson)
         return FlashCardDb(
             word = word,
@@ -114,6 +122,7 @@ interface FlashCardDao {
     """
     )
     fun getFSRSDump(): FSRSStateDump?
+
 }
 
 
