@@ -57,7 +57,7 @@ data class WordDisplayWithInfo(
 class PartOfSpeech(val context: Context, val id: String) {
 
     private fun getInternationalizedStringName(): String {
-        val stripped = id.removePrefix("&").removeSuffix(";")
+        val stripped = id.removePrefix("&").removeSuffix(";").replace("-", "_")
         return "dictionary_part_of_speech_$stripped"
     }
 
@@ -182,13 +182,9 @@ private fun mapSensesToPartsOfSpeech(entry: DictionaryDatabaseEntry): Map<Long, 
         // does the previous sense have any parts of speech and the current sense has none,
         // map it to the current body if it does
         if (i > 0) {
-            val doesCurrentSenseHavePartsOfSpeech = sense.partsOfSpeech.isEmpty()
-
-            if (doesCurrentSenseHavePartsOfSpeech) {
-                mappings[sense.sense.id]?.addAll(sense.partsOfSpeech.map { it -> it.body })
-            } else {
+            if (sense.partsOfSpeech.isEmpty()) {
                 val previousSense = entry.senses[i - 1]
-                val previousSensePartsOfSpeech = previousSense.partsOfSpeech.map { it.body }
+                val previousSensePartsOfSpeech = mappings[previousSense.sense.id] ?: emptyList()
                 mappings[sense.sense.id]?.addAll(previousSensePartsOfSpeech)
             }
         }
