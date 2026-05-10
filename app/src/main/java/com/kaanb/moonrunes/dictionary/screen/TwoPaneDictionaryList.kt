@@ -58,6 +58,7 @@ import com.kaanb.moonrunes.dictionary.util.DictionaryEntry
 import com.kaanb.moonrunes.dictionary.util.formatDictionaryEntry
 import com.kaanb.moonrunes.dictionary.viewmodel.DictionarySearchViewModel
 import com.kaanb.moonrunes.navigation.Route
+import com.kaanb.moonrunes.navigation.SidebarNavigation
 import com.kaanb.moonrunes.ui.theme.MoonRunesTheme
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -71,10 +72,11 @@ fun DictionarySearchScreen(
     results: List<DictionaryEntry>,
     textFieldState: TextFieldState,
     search: (String) -> Unit,
-    navigateToKanji: (String) -> Unit,
     selectEntry: (Long) -> Unit,
     selectedEntry: DictionaryEntry?,
-    onFavoriteButtonPressed: () -> Unit
+    onFavoriteButtonPressed: () -> Unit,
+    navigateTo: (Route)->Unit,
+    dueCardCount: Int,
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Long>()
     val scope = rememberCoroutineScope()
@@ -89,7 +91,16 @@ fun DictionarySearchScreen(
             AnimatedPane() {
                 ModalNavigationDrawer(
                     drawerState = drawerState, drawerContent = {
-                        DrawerSheet(selectedItem = Route.DictionarySearch, onItemClicked = {})
+                        DrawerSheet(selectedItem = Route.DictionarySearch, onItemClicked = {
+                            it ->
+                            run {
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                                navigateTo(it)
+                            }
+                        }, pendingCards = dueCardCount
+                        )
                     }) {
                     Scaffold(
                         modifier = Modifier
@@ -174,7 +185,7 @@ fun DictionarySearchScreen(
                     DetailedDictionaryEntry(
                         modifier = Modifier.padding(top = 8.dp),
                         entry = selectedEntry,
-                        navigateToKanji = navigateToKanji,
+                        navigateToKanji = { kanji -> navigateTo(Route.KanjiEntry(kanji)) },
                         onFavoriteButtonPressed = onFavoriteButtonPressed
                     )
                 }
@@ -206,7 +217,6 @@ fun ListPane(
         visible = false
     ) {
         TextField(rememberTextFieldState(), modifier = Modifier.fillMaxWidth())
-
     }
 
 
@@ -227,13 +237,16 @@ fun ListPane(
     }
 }
 
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DictionarySearchScreen(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     viewModel: DictionarySearchViewModel = hiltViewModel(),
-    navigateToKanji: (String) -> Unit
+    navigateTo: (Route) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -243,10 +256,11 @@ fun DictionarySearchScreen(
         results = uiState.entries,
         textFieldState = viewModel.textFieldState,
         search = viewModel::search,
-        navigateToKanji = navigateToKanji,
         selectEntry = viewModel::selectEntry,
         selectedEntry = uiState.selectedEntry,
         onFavoriteButtonPressed = viewModel::onFavoriteButtonPressed,
+        navigateTo = navigateTo,
+        dueCardCount = uiState.dueCardCount
     )
 
 }

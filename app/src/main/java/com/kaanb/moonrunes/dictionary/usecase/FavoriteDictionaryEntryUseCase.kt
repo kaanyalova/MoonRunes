@@ -13,7 +13,14 @@ class FavoriteDictionaryEntryUseCase @Inject constructor(
     private val getDictionaryEntryByIdUseCase: GetDictionaryEntryByIdUseCase,
     private val flashCardRepository: FlashCardRepository
 ) {
-    suspend operator fun invoke(dictionaryId: Long) {
+    suspend operator fun invoke(dictionaryId: Long, isFavorite: Boolean) {
+        dictionaryRepository.setFavoriteState(dictionaryId, isFavorite)
+
+        if (!isFavorite) {
+            flashCardDao.deleteCardById(dictionaryId)
+            flashCardRepository.deleteCard(dictionaryId)
+        }
+
         val entry = getDictionaryEntryByIdUseCase(dictionaryId)
         val word = entry.mainWordDisplay.word
 
@@ -28,6 +35,7 @@ class FavoriteDictionaryEntryUseCase @Inject constructor(
         // - fetch audio
         // - fetch sentences
         val flashCard = FlashCard(
+            id = dictionaryId,
             word = innerWord,
             wordReading = if (hasKanji) {
                 word.value.kanji
@@ -38,7 +46,8 @@ class FavoriteDictionaryEntryUseCase @Inject constructor(
             exampleSentence = null,
             exampleSentenceFuriganaListJson = listOf(),
             exampleSentenceMeaning = null,
-            audio = byteArrayOf()
+            audio = byteArrayOf(),
+            meaning = entry.meanings.first().values.joinToString(", ")
         )
 
         flashCardRepository.addCard(flashCard)

@@ -10,8 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kaanb.moonrunes.R
 import com.kaanb.moonrunes.dictionary.dao.KanjiDicCharacter
 import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DictionaryEntry.MainWordDisplay
 import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.DictionaryEntry.SingleKanjiWithReading
@@ -40,7 +42,7 @@ fun BriefKanjiEntry(
             //
             //)
 
-            Text("${entry.misc.strokeCount.first().toString()} Strokes", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelMedium)
+            Text("${entry.misc.strokeCount.first().toString()} ${stringResource(R.string.strokes)}", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelMedium)
 
 
         }

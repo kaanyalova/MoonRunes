@@ -24,7 +24,7 @@ fun FlashcardButon(
 ) {
     OutlinedButton(
         onClick = onClick,
-        modifier = Modifier.width(90.dp),
+        modifier = modifier,
         border = BorderStroke(1.dp, color)
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

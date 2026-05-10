@@ -170,11 +170,10 @@ impl FSRSContext {
         })
     }
 
-    fn push_card(&mut self) -> i64 {
-        let card = Card::new();
-        let id = card.id;
+    fn create_card(&mut self, id: i64) {
+        let mut card = Card::new();
+        card.id = id;
         self.cards.push(card);
-        id
     }
 
     fn dump_state(&self) -> Vec<u8> {
@@ -196,6 +195,7 @@ impl FSRSContext {
             .iter()
             .map(|c| c.to_owned())
             .filter(|c| c.due < now)
+            .sorted_by_key(|c| c.due)
             .collect()
     }
 
@@ -284,6 +284,17 @@ impl FSRSContext {
             .collect()
     }
 
+    fn delete_card(&mut self, card_id: i64) -> Result<()> {
+        let index = self
+            .cards
+            .iter()
+            .position(|c| c.id == card_id)
+            .ok_or(anyhow!("card with id {} not found", card_id))?;
+        self.cards.remove(index);
+        self.reviews.remove(&card_id);
+        Ok(())
+    }
+
     fn get_review_info_for_card(&self, card_id: i64) -> Result<CardReviewIntervals> {
         let card = self.cards.iter().find(|c| c.id == card_id);
         if let Some(card) = card {
@@ -317,7 +328,8 @@ impl FSRSContext {
 }
 #[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
 /// returns a "pointer" to the context
-pub extern "system" fn new_fsrs() -> i64 {
+pub extern "system" fn new_fsrs(mut unowned_env: EnvUnowned<'_>, _class: JClass<'_>) -> i64 {
+    let _ = unowned_env;
     let fsrs = FSRSContext::new(0.9).unwrap();
     let boxed = Box::new(Mutex::new(fsrs));
     let raw = Box::into_raw(boxed);
@@ -325,7 +337,12 @@ pub extern "system" fn new_fsrs() -> i64 {
 }
 
 #[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
-pub extern "system" fn free_fsrs(ctx_ptr: i64) {
+pub extern "system" fn free_fsrs(
+    mut unowned_env: EnvUnowned<'_>,
+    _class: JClass<'_>,
+    ctx_ptr: i64,
+) {
+    let _ = unowned_env;
     let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
 
     let _ = unsafe {
@@ -340,11 +357,17 @@ pub extern "system" fn free_fsrs(ctx_ptr: i64) {
 }
 
 #[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
-pub extern "system" fn push_card(ctx_ptr: i64) -> i64 {
+pub extern "system" fn create_card(
+    mut unowned_env: EnvUnowned<'_>,
+    _class: JClass<'_>,
+    ctx_ptr: i64,
+    id: i64,
+) {
+    let _ = unowned_env;
     let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
     let mutex = unsafe { &*ctx_ptr };
     let mut ctx = mutex.lock().unwrap();
-    ctx.push_card()
+    ctx.create_card(id);
 }
 
 #[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
@@ -365,7 +388,8 @@ pub extern "system" fn get_due_cards_as_json<'caller>(
 }
 
 #[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
-pub extern "system" fn optimize(ctx_ptr: i64) {
+pub extern "system" fn optimize(mut unowned_env: EnvUnowned<'_>, _class: JClass<'_>, ctx_ptr: i64) {
+    let _ = unowned_env;
     let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
     let mutex = unsafe { &*ctx_ptr };
     let mut ctx = mutex.lock().unwrap();
@@ -374,10 +398,13 @@ pub extern "system" fn optimize(ctx_ptr: i64) {
 
 #[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
 pub extern "system" fn review_card(
+    mut unowned_env: EnvUnowned<'_>,
+    _class: JClass<'_>,
     ctx_ptr: i64,
     card_id: i32,
     review_type: i32, // maps to ReviewType
 ) {
+    let _ = unowned_env;
     let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
     let mutex = unsafe { &*ctx_ptr };
     let mut ctx = mutex.lock().unwrap();
@@ -440,10 +467,30 @@ pub extern "system" fn new_from_state<'caller>(
     outcome.resolve::<ThrowRuntimeExAndDefault>()
 }
 
-#[jni_mangle("com.kaanb.fsrs_jni.Fsrsjni")]
-pub extern "system" fn does_card_with_id_exist(ctx_ptr: i64, id: i64) -> bool {
+#[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
+pub extern "system" fn does_card_with_id_exist(
+    mut unowned_env: EnvUnowned<'_>,
+    _class: JClass<'_>,
+    ctx_ptr: i64,
+    id: i64,
+) -> bool {
+    let _ = unowned_env;
     let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
     let mutex = unsafe { &*ctx_ptr };
     let ctx = mutex.lock().unwrap();
     ctx.cards.iter().any(|c| c.id == id)
+}
+
+#[jni_mangle("com.kaanb.fsrs_jni.FsrsJni")]
+pub extern "system" fn delete_card(
+    mut unowned_env: EnvUnowned<'_>,
+    _class: JClass<'_>,
+    ctx_ptr: i64,
+    card_id: i64,
+) {
+    let _ = unowned_env;
+    let ctx_ptr = ctx_ptr as *mut Mutex<FSRSContext>;
+    let mutex = unsafe { &*ctx_ptr };
+    let mut ctx = mutex.lock().unwrap();
+    ctx.delete_card(card_id).unwrap();
 }

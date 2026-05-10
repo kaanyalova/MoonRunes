@@ -10,23 +10,38 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kaanb.moonrunes.R
 import com.kaanb.moonrunes.dictionary.dao.DictionaryDatabaseEntry
 import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.OtherForms
 import com.kaanb.moonrunes.dictionary.ui.dictionary_entry.PriorityTagOutlined
 import com.kaanb.moonrunes.dictionary.util.DictionaryEntry
 import com.kaanb.moonrunes.dictionary.util.formatDictionaryEntry
+import com.kaanb.moonrunes.dictionary.util.playAudioForWord
 import com.kaanb.moonrunes.ui.theme.MoonRunesTheme
 import kotlinx.serialization.json.Json
 
 @Composable
-fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifier, navigateToKanji: (String) -> Unit, onFavoriteButtonPressed: () -> Unit) {
+fun DetailedDictionaryEntry(
+    entry: DictionaryEntry,
+    modifier: Modifier = Modifier,
+    navigateToKanji: (String) -> Unit,
+    onFavoriteButtonPressed: () -> Unit
+) {
+    val context = LocalContext.current
+
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -35,10 +50,39 @@ fun DetailedDictionaryEntry(entry: DictionaryEntry, modifier: Modifier = Modifie
         Column(modifier = Modifier.padding(20.dp)) {
             val mainWord = entry.mainWordDisplay.word
 
-            Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 MainWordDisplay(word = mainWord, modifier = Modifier.alignByBaseline())
                 // somewhat baseline aligned by the text
-                FavoriteButton(modifier = Modifier.align(Alignment.Bottom).padding(bottom = 12.dp), isFavorited = entry.isFavorited, onClick = onFavoriteButtonPressed )
+                Row() {
+                    Button(onClick = { playAudioForWord(context, mainWord.asNormalString()) }, modifier = Modifier.padding(horizontal = 8.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                modifier = Modifier.padding(end = 8.dp),
+                                painter = painterResource(R.drawable.play_circle_24px),
+                                contentDescription = null
+                            )
+
+                            Text(stringResource(R.string.dictionary_play_audio))
+
+                        }
+                    }
+
+
+                    FavoriteButton(
+                        modifier = Modifier
+                            .align(Alignment.Bottom)
+                            .padding(bottom = 12.dp),
+                        isFavorited = entry.isFavorited,
+                        onClick = onFavoriteButtonPressed
+                    )
+
+
+                }
+
             }
 
             val mainPriorities = entry.mainWordDisplay.priorities

@@ -9,8 +9,10 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
 import com.kaanb.fsrs_jni.FsrsJni
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
+@Serializable
 data class Furigana(
     val index: Int, val text: String
 )
@@ -18,12 +20,13 @@ data class Furigana(
 
 @Entity
 data class FlashCardDb(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey
+    val id: Long,
     val word: String,
     val wordReading: String?,
     val containsKanji: Boolean,
 
+    val meaning: String,
     // there are fetched form a server
     val exampleSentence: String?,
     val exampleSentenceFuriganaListJson: String?,
@@ -40,13 +43,16 @@ data class FlashCardDb(
         }
 
         val flashCard = FlashCard(
-            word,
-            wordReading,
-            containsKanji,
-            exampleSentence,
-            decodedFuriganaList,
-            exampleSentenceMeaning,
-            audio
+            id= id,
+            word =word,
+            wordReading = wordReading,
+            containsKanji =containsKanji,
+            meaning =meaning,
+            exampleSentence = exampleSentence,
+            exampleSentenceFuriganaListJson = decodedFuriganaList,
+            exampleSentenceMeaning = exampleSentenceMeaning,
+            audio = audio,
+
         )
 
 
@@ -56,12 +62,14 @@ data class FlashCardDb(
 
 }
 
-data class FlashCardWithReviewInfo(
+data class FlashCardState(
     val card: FlashCard,
-    val reviewInfo: FsrsJni.CardReviewIntervals
+    val fsrsState: FsrsJni.Card,
+    val reviewIntervals: FsrsJni.CardReviewIntervals
 )
 
 data class FlashCard(
+    val id: Long, // must reference a dictionary entry
     val word: String,
     val wordReading: String?,
     val containsKanji: Boolean,
@@ -70,6 +78,8 @@ data class FlashCard(
     val exampleSentence: String?,
     val exampleSentenceFuriganaListJson: List<Furigana>,
     val exampleSentenceMeaning: String?,
+    val meaning: String,
+
 
     val audio: ByteArray
 
@@ -78,13 +88,15 @@ data class FlashCard(
     fun into(): FlashCardDb {
         val jsonFuriganaList = Json.encodeToString(exampleSentenceFuriganaListJson)
         return FlashCardDb(
+            id = id,
             word = word,
             wordReading = wordReading,
             containsKanji = containsKanji,
             exampleSentence = exampleSentence,
             exampleSentenceFuriganaListJson = jsonFuriganaList,
             exampleSentenceMeaning = exampleSentenceMeaning,
-            audio = audio
+            audio = audio,
+            meaning = meaning
         )
     }
 }
@@ -116,12 +128,22 @@ interface FlashCardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateFSRSDump(vararg dump: FSRSStateDump)
 
+
+    @Query(
+        """
+            DELETE FROM FlashCardDb WHERE id = :id
+        """
+    )
+    fun deleteCardById(id: Long)
+
     @Query(
         """
         SELECT * FROM FSRSStateDump LIMIT 1; 
     """
     )
     fun getFSRSDump(): FSRSStateDump?
+
+
 
 }
 

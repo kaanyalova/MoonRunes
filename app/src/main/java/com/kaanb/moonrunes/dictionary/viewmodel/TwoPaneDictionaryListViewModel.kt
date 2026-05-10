@@ -8,10 +8,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kaanb.moonrunes.dictionary.repository.DictionaryRepository
 import com.kaanb.moonrunes.dictionary.usecase.FavoriteDictionaryEntryUseCase
 import com.kaanb.moonrunes.dictionary.usecase.GetDictionaryEntryByIdUseCase
 import com.kaanb.moonrunes.dictionary.usecase.SearchAndFormatDictionaryEntriesUseCase
 import com.kaanb.moonrunes.dictionary.util.DictionaryEntry
+import com.kaanb.moonrunes.flash_cards.repository.FlashCardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +26,8 @@ const val TAG = "DictionarySearchViewModel"
 
 data class DictionarySearchUiState(
     val entries: List<DictionaryEntry> = listOf(),
-    val selectedEntry: DictionaryEntry? = null
+    val selectedEntry: DictionaryEntry? = null,
+    val dueCardCount: Int = 0
 )
 
 @HiltViewModel
@@ -32,7 +35,8 @@ data class DictionarySearchUiState(
 class DictionarySearchViewModel @Inject constructor(
     private val searchAndFormatDictionaryEntriesUseCase: SearchAndFormatDictionaryEntriesUseCase,
     private val getDictionaryEntryByIdUseCase: GetDictionaryEntryByIdUseCase,
-    private val favoriteDictionaryEntryUseCase: FavoriteDictionaryEntryUseCase
+    private val favoriteDictionaryEntryUseCase: FavoriteDictionaryEntryUseCase,
+    private val flashCardRepository: FlashCardRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DictionarySearchUiState())
     val uiState = _uiState.asStateFlow()
@@ -46,6 +50,12 @@ class DictionarySearchViewModel @Inject constructor(
                 .collectLatest { text ->
                     search(text.toString())
                 }
+
+            _uiState.update { state ->
+                state.copy(
+                    dueCardCount = flashCardRepository.getDueCards().count()
+                )
+            }
         }
 
         _uiState.update {
@@ -78,7 +88,10 @@ class DictionarySearchViewModel @Inject constructor(
             return
         }
 
-        favoriteDictionaryEntryUseCase(_uiState.value.selectedEntry!!.entryId, !favoriteState)
+
+        viewModelScope.launch {
+            favoriteDictionaryEntryUseCase(_uiState.value.selectedEntry!!.entryId, !favoriteState)
+        }
 
         _uiState.update { state ->
             state.copy(

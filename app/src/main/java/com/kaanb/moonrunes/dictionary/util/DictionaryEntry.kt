@@ -36,6 +36,14 @@ data class Meaning(
 sealed class WordDisplayData {
     data class KanjiWordDisplay(val value: KanjiWithSingleReading) : WordDisplayData()
     data class NormalWordDisplay(val value: String) : WordDisplayData()
+
+
+    fun asNormalString(): String {
+        when (this) {
+            is KanjiWordDisplay -> return value.kanji
+            is NormalWordDisplay -> return value
+        }
+    }
 }
 
 data class WordDisplayWithInfo(

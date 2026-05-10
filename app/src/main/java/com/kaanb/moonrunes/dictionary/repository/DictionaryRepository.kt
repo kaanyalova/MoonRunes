@@ -14,9 +14,11 @@ import com.kaanb.moonrunes.dictionary.util.TextType
 import com.kaanb.moonrunes.dictionary.util.detectTextType
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
+import javax.inject.Singleton
 
 const val TAG = "DictionaryRepository"
 
+@Singleton
 class DictionaryRepository @Inject constructor(private val dictionaryDao: DictionaryDao) {
 
     val MAX_ENTRIES_PER_CATEGORY = 50
@@ -111,6 +113,10 @@ class DictionaryRepository @Inject constructor(private val dictionaryDao: Dictio
 
     fun setFavoriteState(id: Long, state: Boolean) {
         dictionaryDao.setEntryFavoriteState(id, state)
+    }
+
+    fun getFavoritedEntries(): List<DictionaryDatabaseEntry> {
+        return dictionaryDao.getFavoritedEntries()
     }
 
 }

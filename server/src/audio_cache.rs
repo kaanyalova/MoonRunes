@@ -48,8 +48,11 @@ pub struct AudioRecord {
     pub audio: Vec<u8>,
 }
 
-async fn cached_get_audio_from_jisho(word: &str, pool: &Pool<Sqlite>) -> Result<Option<Vec<u8>>> {
-    let queried: Option<AudioRecord> = query_as("SELECT * FROM AUDIO WHERE word = ?")
+pub async fn cached_get_audio_from_jisho(
+    word: &str,
+    pool: &Pool<Sqlite>,
+) -> Result<Option<Vec<u8>>> {
+    let queried: Option<AudioRecord> = query_as("SELECT * FROM AudioRecord WHERE word = ?")
         .bind(word)
         .fetch_optional(pool)
         .await?;
@@ -57,9 +60,11 @@ async fn cached_get_audio_from_jisho(word: &str, pool: &Pool<Sqlite>) -> Result<
     if let Some(audio_record) = queried {
         return Ok(Some(audio_record.audio));
     } else {
-        let audio_url = get_audio_url_from_jisho("word").await;
+        let audio_url = get_audio_url_from_jisho(word).await;
 
         if let Ok(url) = audio_url {
+            println!("got audio url {}", &url);
+
             let audio = download_audio(&url).await?;
             query("INSERT INTO AudioRecord(word, audio) VALUES (?, ?)")
                 .bind(word)
@@ -76,7 +81,7 @@ async fn cached_get_audio_from_jisho(word: &str, pool: &Pool<Sqlite>) -> Result<
 
 #[tokio::test]
 async fn test_audio_scraping() {
-    let word = "日";
+    let word = "watashi";
     let audio = get_audio_url_from_jisho(word).await.unwrap();
     dbg!(audio);
 }

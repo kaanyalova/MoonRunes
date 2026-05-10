@@ -221,6 +221,14 @@ interface DictionaryDao {
     )
     fun getEntryById(id: Long): DictionaryDatabaseEntry
 
+    @Transaction
+    @Query(
+        """
+           SELECT * FROM Entry WHERE is_favorited = 1
+    """
+    )
+    fun getFavoritedEntries(): List<DictionaryDatabaseEntry>
+
     @Query("SELECT * FROM KanjiDicEntry WHERE body = :body")
     fun getKanjiDicEntry(body: String): KanjiDicEntry
 

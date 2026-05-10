@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="48"
+   height="48"
+   viewBox="0 0 48 48"
+   version="1.1"
+   id="svg1"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <linearGradient
+       id="linearGradient1">
+      <stop
+         style="stop-color:#e1d08c;stop-opacity:1;"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#decd87;stop-opacity:0.43236825;"
+         offset="1"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="4"
+       y1="25"
+       x2="46"
+       y2="25"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     id="layer1">
+    <rect
+       style="fill:#282238;fill-opacity:1"
+       id="rect1"
+       width="49.432804"
+       height="48.671398"
+       x="-0.64426643"
+       y="-0.11713935" />
+    <g
+       id="g10"
+       transform="translate(-0.50301983,-0.33735979)">
+      <g
+         id="g9"
+         transform="translate(-0.49698017,-0.66264021)">
+        <circle
+           style="fill:url(#linearGradient2);stroke-width:0.875"
+           id="path1"
+           cx="25"
+           cy="25"
+           r="21" />
+        <ellipse
+           style="fill:#beaf7b;fill-opacity:1"
+           id="path2"
+           cx="37.563416"
+           cy="37.190681"
+           rx="1.5323554"
+           ry="1.4909405" />
+        <ellipse
+           style="fill:#beaf7b;fill-opacity:1"
+           id="path3"
+           cx="10.685073"
+           cy="15.4478"
+           rx="2.3192408"
+           ry="2.4434857" />
+        <ellipse
+           style="fill:#beaf7b;fill-opacity:1"
+           id="path4"
+           cx="31.930975"
+           cy="9.9810181"
+           rx="2.2778256"
+           ry="2.1949956" />
+        <ellipse
+           style="fill:#beaf7b;fill-opacity:1"
+           id="path5"
+           cx="24.683348"
+           cy="30.812769"
+           rx="1.9879206"
+           ry="2.0707507" />
+        <ellipse
+           style="fill:#beaf7b;fill-opacity:1"
+           id="path6"
+           cx="19.25798"
+           cy="24.559103"
+           rx="2.1121657"
+           ry="2.0293357" />
+        <ellipse
+           style="fill:#beaf7b;fill-opacity:1"
+           id="path7"
+           cx="15.903365"
+           cy="37.232098"
+           rx="5.1354618"
+           ry="4.7627263" />
+        <ellipse
+           style="fill:#beaf7b;fill-opacity:1"
+           id="path8"
+           cx="14.288179"
+           cy="24.103537"
+           rx="2.2778256"
+           ry="2.2364106" />
+      </g>
+      <path
+         d="m 32.965519,13.33736 v 18.375 q 0,2.625 -2.25,2.625 l -3.5625,-0.28125 -0.46875,-1.875 3.65625,0.28125 q 0.75,0 0.75,-1.3125 v -4.21875 h -11.625 q -0.84375,4.125 -3.28125,7.5 l -1.78125,-1.03125 q 3.375,-5.0625 3.5625,-10.03125 V 13.33736 Z m -13.125,5.90625 h 11.25 v -4.125 h -11.25 z m -0.09375,5.90625 h 11.34375 v -4.125 h -11.25 z"
+         id="text2"
+         style="font-size:24px;fill:#282238"
+         aria-label="月" />
+    </g>
+  </g>
+</svg>

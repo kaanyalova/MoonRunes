@@ -50,11 +50,12 @@ class FsrsJni {
     data class Card(
         val id: Long,
         val due: Long,
+        @SerialName("memory_state")
         val memoryState: MemoryState?,
         @SerialName("scheduled_days")
         val scheduledDays: Int,
         @SerialName("last_review")
-        val lastReview: Long,
+        val lastReview: Long?,
     )
 
     @Serializable
@@ -74,24 +75,25 @@ class FsrsJni {
 
     // External functions provided by the rust implementation see the fsrs_jni_rs file
     // for the implementation
-    private external fun new_fsrs(): Long
-    private external fun new_fsrs_from_state(state: ByteArray): Long
-    private external fun free_fsrs(context_ptr: Long)
-    private external fun dump_state(ctx_ptr: Long): ByteArray
-    private external fun push_card(ctx_ptr: Long): Long
-    private external fun get_due_cards_as_json(ctx_ptr: Long): String
+    private external fun newFsrs(): Long
+    private external fun newFromState(state: ByteArray): Long
+    private external fun freeFsrs(context_ptr: Long)
+    private external fun dumpState(ctx_ptr: Long): ByteArray
+    private external fun createCard(ctx_ptr: Long, id: Long)
+    private external fun getDueCardsAsJson(ctx_ptr: Long): String
     private external fun optimize(ctx_ptr: Long)
-    private external fun review_card(ctx_ptr: Long, card_id: Long, review_type: Int)
-    private external fun get_review_info_for_card(ctx_ptr: Long, card_id: Long): String
+    private external fun reviewCard(ctx_ptr: Long, card_id: Long, review_type: Int)
+    private external fun getReviewInfoForCard(ctx_ptr: Long, card_id: Long): String
 
-    private external fun does_card_with_id_exist(ctx_ptr: Long, card_id: Long): Boolean
+    private external fun doesCardWithIdExist(ctx_ptr: Long, card_id: Long): Boolean
+    private external fun deleteCard(ctx_ptr: Long, card_id: Long)
 
     constructor(state: ByteArray? = null) {
         System.loadLibrary("fsrs_jni")
         if (state == null) {
-            fsrsContextPointer = new_fsrs()
+            fsrsContextPointer = newFsrs()
         } else {
-            fsrsContextPointer = new_fsrs_from_state(state)
+            fsrsContextPointer = newFromState(state)
         }
 
         if (fsrsContextPointer == 0L) {
@@ -102,7 +104,7 @@ class FsrsJni {
     /// why there is no destructors, or something like C#
     private fun free() {
         if (fsrsContextPointer != 0L) {
-            free_fsrs(fsrsContextPointer)
+            freeFsrs(fsrsContextPointer)
             Log.e(TAG, "fsrsContextPointer is NULL and trying to free it")
         }
     }
@@ -113,18 +115,18 @@ class FsrsJni {
     }
 
 
-    public fun pushCard(): Long {
-        return push_card(fsrsContextPointer)
+    public fun createCard(id: Long) {
+        createCard(fsrsContextPointer, id)
     }
 
     public fun getDueCards(): List<Card> {
-        val dueCardsJson = get_due_cards_as_json(fsrsContextPointer)
+        val dueCardsJson = getDueCardsAsJson(fsrsContextPointer)
         return Json.decodeFromString<List<Card>>(dueCardsJson)
     }
 
     public fun reviewCard(cardId: Long, reviewType: ReviewType) {
         val reviewTypeAsInt = reviewType.intoInt()
-        review_card(fsrsContextPointer, cardId, reviewTypeAsInt)
+        reviewCard(fsrsContextPointer, cardId, reviewTypeAsInt)
     }
 
     public fun optimize() {
@@ -132,22 +134,38 @@ class FsrsJni {
     }
 
     public fun dumpState(): ByteArray {
-        return dump_state(fsrsContextPointer)
+        return dumpState(fsrsContextPointer)
     }
 
     public fun getReviewInfoForCard(cardId: Long): CardReviewIntervals {
-        val reviewInfoJson= get_review_info_for_card(fsrsContextPointer, cardId)
-        return Json.decodeFromString<CardReviewIntervals>(reviewInfoJson)
+        try {
+            val reviewInfoJson= getReviewInfoForCard(fsrsContextPointer, cardId)
+            return Json.decodeFromString<CardReviewIntervals>(reviewInfoJson)
+        } catch (e: Exception) {
+            Log.d(TAG,"getReviewInfoForCard failed with $e")
+        }
+
+        return CardReviewIntervals(
+            againInterval = 0f,
+            hardInterval = 0f,
+            goodInterval = 0f,
+            easyInterval = 0f
+        )
+
     }
 
     public fun doesCardWithIdExist(cardId: Long):Boolean {
-        return does_card_with_id_exist(fsrsContextPointer, cardId)
+        return doesCardWithIdExist(fsrsContextPointer, cardId)
+    }
+
+    public fun deleteCard(cardId: Long) {
+        deleteCard(fsrsContextPointer, cardId)
     }
 
 
     public fun recreateFromState(state: ByteArray) {
         free()
-        fsrsContextPointer = new_fsrs_from_state(state)
+        fsrsContextPointer = newFromState(state)
     }
 
 

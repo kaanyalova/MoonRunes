@@ -16,4 +16,12 @@ sealed interface Route : NavKey {
     data object DictionarySearch: Route, NavKey
 
 
+    @Serializable
+    data object FlashCards: Route, NavKey
+
+    @Serializable
+    data object FavoritesList: Route, NavKey
+
+    @Serializable
+    data object Wotd: Route, NavKey
 }

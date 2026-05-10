@@ -1,98 +1,6 @@
 <resources>
-    <string name="app_name">MoonRunes</string>
+    <string name="app_name" translatable="false">MoonRunes</string>
 
-    <string name="dictionary_part_of_speech_adj_f">noun or verb acting prenominally</string>
-    <string name="dictionary_part_of_speech_adj_i">adjective (keiyoushi)</string>
-    <string name="dictionary_part_of_speech_adj_ix">adjective (keiyoushi) - yoi/ii class</string>
-    <string name="dictionary_part_of_speech_adj_kari">\'kari\' adjective (archaic)</string>
-    <string name="dictionary_part_of_speech_adj_ku">\'ku\' adjective (archaic)</string>
-    <string name="dictionary_part_of_speech_adj_na">adjectival nouns or quasi-adjectives (keiyodoshi)</string>
-    <string name="dictionary_part_of_speech_adj_nari">archaic/formal form of na-adjective</string>
-    <string name="dictionary_part_of_speech_adj_no">nouns which may take the genitive case particle \'no\'</string>
-    <string name="dictionary_part_of_speech_adj_pn">pre-noun adjectival (rentaishi)</string>
-    <string name="dictionary_part_of_speech_adj_shiku">\'shiku\' adjective (archaic)</string>
-    <string name="dictionary_part_of_speech_adj_t">\'taru\' adjective</string>
-    <string name="dictionary_part_of_speech_adv">adverb (fukushi)</string>
-    <string name="dictionary_part_of_speech_adv_to">adverb taking the \'to\' particle</string>
-    <string name="dictionary_part_of_speech_aux">auxiliary</string>
-    <string name="dictionary_part_of_speech_aux_adj">auxiliary adjective</string>
-    <string name="dictionary_part_of_speech_aux_v">auxiliary verb</string>
-    <string name="dictionary_part_of_speech_conj">conjunction</string>
-    <string name="dictionary_part_of_speech_cop">copula</string>
-    <string name="dictionary_part_of_speech_ctr">counter</string>
-    <string name="dictionary_part_of_speech_exp">expressions (phrases, clauses, etc.)</string>
-    <string name="dictionary_part_of_speech_int">interjection (kandoushi)</string>
-    <string name="dictionary_part_of_speech_n">noun (common) (futsuumeishi)</string>
-    <string name="dictionary_part_of_speech_n_adv">adverbial noun (fukushitekimeishi)</string>
-    <string name="dictionary_part_of_speech_n_pr">proper noun</string>
-    <string name="dictionary_part_of_speech_n_pref">noun, used as a prefix</string>
-    <string name="dictionary_part_of_speech_n_suf">noun, used as a suffix</string>
-    <string name="dictionary_part_of_speech_n_t">noun (temporal) (jisoumeishi)</string>
-    <string name="dictionary_part_of_speech_num">numeric</string>
-    <string name="dictionary_part_of_speech_pn">pronoun</string>
-    <string name="dictionary_part_of_speech_pref">prefix</string>
-    <string name="dictionary_part_of_speech_prt">particle</string>
-    <string name="dictionary_part_of_speech_suf">suffix</string>
-    <string name="dictionary_part_of_speech_unc">unclassified</string>
-    <string name="dictionary_part_of_speech_v_unspec">verb unspecified</string>
-    <string name="dictionary_part_of_speech_v1">Ichidan verb</string>
-    <string name="dictionary_part_of_speech_v1_s">Ichidan verb - kureru special class</string>
-    <string name="dictionary_part_of_speech_v2a_s">Nidan verb with \'u\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2b_k">Nidan verb (upper class) with \'bu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2b_s">Nidan verb (lower class) with \'bu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2d_k">Nidan verb (upper class) with \'dzu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2d_s">Nidan verb (lower class) with \'dzu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2g_k">Nidan verb (upper class) with \'gu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2g_s">Nidan verb (lower class) with \'gu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2h_k">Nidan verb (upper class) with \'hu/fu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2h_s">Nidan verb (lower class) with \'hu/fu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2k_k">Nidan verb (upper class) with \'ku\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2k_s">Nidan verb (lower class) with \'ku\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2m_k">Nidan verb (upper class) with \'mu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2m_s">Nidan verb (lower class) with \'mu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2n_s">Nidan verb (lower class) with \'nu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2r_k">Nidan verb (upper class) with \'ru\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2r_s">Nidan verb (lower class) with \'ru\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2s_s">Nidan verb (lower class) with \'su\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2t_k">Nidan verb (upper class) with \'tsu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2t_s">Nidan verb (lower class) with \'tsu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2w_s">Nidan verb (lower class) with \'u\' ending and \'we\' conjugation (archaic)</string>
-    <string name="dictionary_part_of_speech_v2y_k">Nidan verb (upper class) with \'yu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2y_s">Nidan verb (lower class) with \'yu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v2z_s">Nidan verb (lower class) with \'zu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v4b">Yodan verb with \'bu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v4g">Yodan verb with \'gu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v4h">Yodan verb with \'hu/fu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v4k">Yodan verb with \'ku\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v4m">Yodan verb with \'mu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v4n">Yodan verb with \'nu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v4r">Yodan verb with \'ru\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v4s">Yodan verb with \'su\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v4t">Yodan verb with \'tsu\' ending (archaic)</string>
-    <string name="dictionary_part_of_speech_v5aru">Godan verb - -aru special class</string>
-    <string name="dictionary_part_of_speech_v5b">Godan verb with \'bu\' ending</string>
-    <string name="dictionary_part_of_speech_v5g">Godan verb with \'gu\' ending</string>
-    <string name="dictionary_part_of_speech_v5k">Godan verb with \'ku\' ending</string>
-    <string name="dictionary_part_of_speech_v5k_s">Godan verb - Iku/Yuku special class</string>
-    <string name="dictionary_part_of_speech_v5m">Godan verb with \'mu\' ending</string>
-    <string name="dictionary_part_of_speech_v5n">Godan verb with \'nu\' ending</string>
-    <string name="dictionary_part_of_speech_v5r">Godan verb with \'ru\' ending</string>
-    <string name="dictionary_part_of_speech_v5r_i">Godan verb with \'ru\' ending (irregular verb)</string>
-    <string name="dictionary_part_of_speech_v5s">Godan verb with \'su\' ending</string>
-    <string name="dictionary_part_of_speech_v5t">Godan verb with \'tsu\' ending</string>
-    <string name="dictionary_part_of_speech_v5u">Godan verb with \'u\' ending</string>
-    <string name="dictionary_part_of_speech_v5u_s">Godan verb with \'u\' ending (special class)</string>
-    <string name="dictionary_part_of_speech_v5uru">Godan verb - Uru old class verb (old form of Eru)</string>
-    <string name="dictionary_part_of_speech_vi">intransitive verb</string>
-    <string name="dictionary_part_of_speech_vk">Kuru verb - special class</string>
-    <string name="dictionary_part_of_speech_vn">irregular nu verb</string>
-    <string name="dictionary_part_of_speech_vr">irregular ru verb, plain form ends with -ri</string>
-    <string name="dictionary_part_of_speech_vs">noun or participle which takes the aux. verb suru</string>
-    <string name="dictionary_part_of_speech_vs_c">su verb - precursor to the modern suru</string>
-    <string name="dictionary_part_of_speech_vs_i">suru verb - included</string>
-    <string name="dictionary_part_of_speech_vs_s">suru verb - special class</string>
-    <string name="dictionary_part_of_speech_vt">transitive verb</string>
-    <string name="dictionary_part_of_speech_vz">Ichidan verb - zuru verb (alternative form of -jiru verbs)</string>
     <string name="dictionary_meanings">Meanings</string>
     <string name="dictionary_other_forms">Other Forms</string>
     <string name="dictionary_search_bar_placeholder">Search a Word</string>
@@ -102,4 +10,114 @@
     <string name="sidebar_name_flash_cards">Flash Cards</string>
     <string name="sidebar_name_about">About</string>
     <string name="sidebar_name_settings">Settings</string>
+    <string name="flashcard_no_cards_due">No Cards Due</string>
+    <string name="flashcard_go_back">Go Back</string>
+    <string name="dictionary_play_audio">Play Audio</string>
+    <string name="cards_due">Due</string>
+    <string name="stroke_order">Stroke Order</string>
+    <string name="strokes">Strokes</string>
+    <string name="show_answer">Show Answer</string>
+
+
+    <!-- Dictionary Stuff -->
+    <string name="dictionary_part_of_speech_adj_f" translatable="false">noun or verb acting prenominally</string>
+    <string name="dictionary_part_of_speech_adj_i" translatable="false">adjective (keiyoushi)</string>
+    <string name="dictionary_part_of_speech_adj_ix" translatable="false">adjective (keiyoushi) - yoi/ii class</string>
+    <string name="dictionary_part_of_speech_adj_kari" translatable="false">\'kari\' adjective (archaic)</string>
+    <string name="dictionary_part_of_speech_adj_ku" translatable="false">\'ku\' adjective (archaic)</string>
+    <string name="dictionary_part_of_speech_adj_na" translatable="false">adjectival nouns or quasi-adjectives (keiyodoshi)</string>
+    <string name="dictionary_part_of_speech_adj_nari" translatable="false">archaic/formal form of na-adjective</string>
+    <string name="dictionary_part_of_speech_adj_no" translatable="false">nouns which may take the genitive case particle \'no\'</string>
+    <string name="dictionary_part_of_speech_adj_pn" translatable="false">pre-noun adjectival (rentaishi)</string>
+    <string name="dictionary_part_of_speech_adj_shiku" translatable="false">\'shiku\' adjective (archaic)</string>
+    <string name="dictionary_part_of_speech_adj_t" translatable="false">\'taru\' adjective</string>
+    <string name="dictionary_part_of_speech_adv" translatable="false">adverb (fukushi)</string>
+    <string name="dictionary_part_of_speech_adv_to" translatable="false">adverb taking the \'to\' particle</string>
+    <string name="dictionary_part_of_speech_aux" translatable="false">auxiliary</string>
+    <string name="dictionary_part_of_speech_aux_adj" translatable="false">auxiliary adjective</string>
+    <string name="dictionary_part_of_speech_aux_v" translatable="false">auxiliary verb</string>
+    <string name="dictionary_part_of_speech_conj" translatable="false">conjunction</string>
+    <string name="dictionary_part_of_speech_cop" translatable="false">copula</string>
+    <string name="dictionary_part_of_speech_ctr" translatable="false">counter</string>
+    <string name="dictionary_part_of_speech_exp" translatable="false">expressions (phrases, clauses, etc.)</string>
+    <string name="dictionary_part_of_speech_int" translatable="false">interjection (kandoushi)</string>
+    <string name="dictionary_part_of_speech_n" translatable="false">noun (common) (futsuumeishi)</string>
+    <string name="dictionary_part_of_speech_n_adv" translatable="false">adverbial noun (fukushitekimeishi)</string>
+    <string name="dictionary_part_of_speech_n_pr" translatable="false">proper noun</string>
+    <string name="dictionary_part_of_speech_n_pref" translatable="false">noun, used as a prefix</string>
+    <string name="dictionary_part_of_speech_n_suf" translatable="false">noun, used as a suffix</string>
+    <string name="dictionary_part_of_speech_n_t" translatable="false">noun (temporal) (jisoumeishi)</string>
+    <string name="dictionary_part_of_speech_num" translatable="false">numeric</string>
+    <string name="dictionary_part_of_speech_pn" translatable="false">pronoun</string>
+    <string name="dictionary_part_of_speech_pref" translatable="false">prefix</string>
+    <string name="dictionary_part_of_speech_prt" translatable="false">particle</string>
+    <string name="dictionary_part_of_speech_suf" translatable="false">suffix</string>
+    <string name="dictionary_part_of_speech_unc" translatable="false">unclassified</string>
+    <string name="dictionary_part_of_speech_v_unspec" translatable="false">verb unspecified</string>
+    <string name="dictionary_part_of_speech_v1" translatable="false">Ichidan verb</string>
+    <string name="dictionary_part_of_speech_v1_s" translatable="false">Ichidan verb - kureru special class</string>
+    <string name="dictionary_part_of_speech_v2a_s" translatable="false">Nidan verb with \'u\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2b_k" translatable="false">Nidan verb (upper class) with \'bu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2b_s" translatable="false">Nidan verb (lower class) with \'bu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2d_k" translatable="false">Nidan verb (upper class) with \'dzu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2d_s" translatable="false">Nidan verb (lower class) with \'dzu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2g_k" translatable="false">Nidan verb (upper class) with \'gu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2g_s" translatable="false">Nidan verb (lower class) with \'gu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2h_k" translatable="false">Nidan verb (upper class) with \'hu/fu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2h_s" translatable="false">Nidan verb (lower class) with \'hu/fu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2k_k" translatable="false">Nidan verb (upper class) with \'ku\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2k_s" translatable="false">Nidan verb (lower class) with \'ku\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2m_k" translatable="false">Nidan verb (upper class) with \'mu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2m_s" translatable="false">Nidan verb (lower class) with \'mu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2n_s" translatable="false">Nidan verb (lower class) with \'nu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2r_k" translatable="false">Nidan verb (upper class) with \'ru\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2r_s" translatable="false">Nidan verb (lower class) with \'ru\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2s_s" translatable="false">Nidan verb (lower class) with \'su\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2t_k" translatable="false">Nidan verb (upper class) with \'tsu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2t_s" translatable="false">Nidan verb (lower class) with \'tsu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2w_s" translatable="false">Nidan verb (lower class) with \'u\' ending and \'we\' conjugation (archaic)</string>
+    <string name="dictionary_part_of_speech_v2y_k" translatable="false">Nidan verb (upper class) with \'yu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2y_s" translatable="false">Nidan verb (lower class) with \'yu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v2z_s" translatable="false">Nidan verb (lower class) with \'zu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v4b" translatable="false">Yodan verb with \'bu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v4g" translatable="false">Yodan verb with \'gu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v4h" translatable="false">Yodan verb with \'hu/fu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v4k" translatable="false">Yodan verb with \'ku\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v4m" translatable="false">Yodan verb with \'mu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v4n" translatable="false">Yodan verb with \'nu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v4r" translatable="false">Yodan verb with \'ru\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v4s" translatable="false">Yodan verb with \'su\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v4t" translatable="false">Yodan verb with \'tsu\' ending (archaic)</string>
+    <string name="dictionary_part_of_speech_v5aru" translatable="false">Godan verb - -aru special class</string>
+    <string name="dictionary_part_of_speech_v5b" translatable="false">Godan verb with \'bu\' ending</string>
+    <string name="dictionary_part_of_speech_v5g" translatable="false">Godan verb with \'gu\' ending</string>
+    <string name="dictionary_part_of_speech_v5k" translatable="false">Godan verb with \'ku\' ending</string>
+    <string name="dictionary_part_of_speech_v5k_s" translatable="false">Godan verb - Iku/Yuku special class</string>
+    <string name="dictionary_part_of_speech_v5m" translatable="false">Godan verb with \'mu\' ending</string>
+    <string name="dictionary_part_of_speech_v5n" translatable="false">Godan verb with \'nu\' ending</string>
+    <string name="dictionary_part_of_speech_v5r" translatable="false">Godan verb with \'ru\' ending</string>
+    <string name="dictionary_part_of_speech_v5r_i" translatable="false">Godan verb with \'ru\' ending (irregular verb)</string>
+    <string name="dictionary_part_of_speech_v5s" translatable="false">Godan verb with \'su\' ending</string>
+    <string name="dictionary_part_of_speech_v5t" translatable="false">Godan verb with \'tsu\' ending</string>
+    <string name="dictionary_part_of_speech_v5u" translatable="false">Godan verb with \'u\' ending</string>
+    <string name="dictionary_part_of_speech_v5u_s" translatable="false">Godan verb with \'u\' ending (special class)</string>
+    <string name="dictionary_part_of_speech_v5uru" translatable="false">Godan verb - Uru old class verb (old form of Eru)</string>
+    <string name="dictionary_part_of_speech_vi" translatable="false">intransitive verb</string>
+    <string name="dictionary_part_of_speech_vk" translatable="false">Kuru verb - special class</string>
+    <string name="dictionary_part_of_speech_vn" translatable="false">irregular nu verb</string>
+    <string name="dictionary_part_of_speech_vr" translatable="false">irregular ru verb, plain form ends with -ri</string>
+    <string name="dictionary_part_of_speech_vs" translatable="false">noun or participle which takes the aux. verb suru</string>
+    <string name="dictionary_part_of_speech_vs_c" translatable="false">su verb - precursor to the modern suru</string>
+    <string name="dictionary_part_of_speech_vs_i" translatable="false">suru verb - included</string>
+    <string name="dictionary_part_of_speech_vs_s" translatable="false">suru verb - special class</string>
+    <string name="dictionary_part_of_speech_vt" translatable="false">transitive verb</string>
+    <string name="dictionary_part_of_speech_vz" translatable="false">Ichidan verb - zuru verb (alternative form of -jiru verbs)</string>
+    <string name="about_go_to_jmdict">Go to Website</string>
+    <string name="about_jmdict">The JMDict Project</string>
+    <string name="about_jmdict_license" translatable="false">" Creative Commons Attribution-ShareAlike Licence (V4.0)"</string>
+    <string name="about_kanjidic" translatable="false">Kanjidic2</string>
+    <string name="about_go_to_kanjidic">Go to Website</string>
+    <string name="sidebar_name_wotd">Word of the Day</string>
+    <string name="wotd_failed">Failed to get Word of the Day\n</string>
+
 </resources>
