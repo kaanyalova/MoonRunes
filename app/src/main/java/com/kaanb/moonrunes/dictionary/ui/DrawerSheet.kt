@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
@@ -79,10 +80,11 @@ fun DrawerSheet(
 
             NavigationDrawerItem(
                 icon = {
-                    Icon(
-                        painter = painterResource(R.drawable.clear_day_24px),
-                        contentDescription = null
-                    )
+                    //Icon(
+                    //    painter = painterResource(R.drawable.clear_day_24px),
+                    //    contentDescription = null
+                    //)
+                    Text("日", style = MaterialTheme.typography.titleLarge)
                 },
                 label = { Text(stringResource(R.string.sidebar_name_wotd)) },
                 selected = selectedItem == Route.Wotd,
