@@ -1,6 +1,5 @@
 package com.kaanb.moonrunes
 
-import com.kaanb.moonrunes.dictionary.util.KanjiStrokeExtractor
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -124,7 +123,5 @@ class KanjiStrokeRenderer {
         """.trimIndent()
 
 
-        val paths = KanjiStrokeExtractor("躙", xml).toPaths()
-        println(paths.toString())
     }
 }
